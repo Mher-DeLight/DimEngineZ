@@ -40,6 +40,6 @@ struct DrawObject {
 } // namespace DimEngineZ
 
 namespace DimEngineZ::manager {
-using FuncitonCallack = std::function<std::string()>;
+using FuncitonCallack = std::function<bool()>;
 int loop(FuncitonCallack func);
 } // namespace DimEngineZ::manager

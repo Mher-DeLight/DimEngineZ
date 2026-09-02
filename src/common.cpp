@@ -32,16 +32,12 @@ void DrawObject::draw() const {
 } // namespace DimEngineZ
 
 namespace DimEngineZ::manager {
-int loop(std::function<std::string()> func) {
-    while (!WindowShouldClose()) {
-        std::string err = func();
-        if (!err.empty()) {
-            TraceLog(LOG_FATAL, err.c_str());
-            CloseWindow();
-            return -1;
-        }
+int loop(std::function<bool()> func) {
+    bool status = true;
+    while (!WindowShouldClose() && status) {
+        status = func();
     }
     CloseWindow();
-    return 0;
+    return status ? 0 : -1;
 }
 } // namespace DimEngineZ::manager

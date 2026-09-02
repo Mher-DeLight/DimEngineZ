@@ -36,6 +36,6 @@ int main() {
         DrawText("Simple 3D Cube with Raylib", 10, 10, 20, DARKGRAY);
         EndDrawing();
 
-        return "";
+        return true;
     });
 }
