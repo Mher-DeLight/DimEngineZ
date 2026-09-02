@@ -20,7 +20,7 @@ int main() {
         mesh, DimEngineZ::Transform({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}));
 
     // 3. Main Application Loop
-    DimEngineZ::manager::loop([&]() {
+    return DimEngineZ::manager::loop([&]() {
         float delta = GetFrameTime();
 
         // 4. Render Cycle
@@ -36,10 +36,6 @@ int main() {
         DrawText("Simple 3D Cube with Raylib", 10, 10, 20, DARKGRAY);
         EndDrawing();
 
-        return "uh oh";
+        return "";
     });
-
-    // 5. Clean up
-    CloseWindow();
-    return 0;
 }
