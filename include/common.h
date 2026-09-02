@@ -94,6 +94,7 @@ struct MovementObject {
 };
 struct CollisionBox {
     BoundingBox box;
+    void update(const Transform& transform);
 
     bool colliding_with(const CollisionBox& other) const;
 
@@ -103,6 +104,9 @@ struct CollisionBox {
 struct PhysicsObject {
     CollisionBox collision;
     MovementObject core;
+
+    void resolveCollision(PhysicsObject& other);
+    void tick(float delta);
 
     PhysicsObject(DrawObject shape) : collision(shape.model), core(std::move(shape)) {}
 };

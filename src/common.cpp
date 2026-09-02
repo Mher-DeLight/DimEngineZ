@@ -1,4 +1,5 @@
 #include "../include/common.h"
+#include <iostream>
 #include <stdexcept>
 
 namespace DimEngineZ {
@@ -90,6 +91,76 @@ void MovementObject::applyImpulse(const Vector3& impulse) {
 // == COLLISION BOX ==
 bool CollisionBox::colliding_with(const CollisionBox& other) const {
     return CheckCollisionBoxes(box, other.box);
+}
+void CollisionBox::update(const Transform& transform) {
+    Vector3 center = {(box.min.x + box.max.x) * 0.5f, (box.min.y + box.max.y) * 0.5f,
+                      (box.min.z + box.max.z) * 0.5f};
+
+    Vector3 offset = Vector3Subtract(transform.position, center);
+
+    box.min = Vector3Add(box.min, offset);
+    box.max = Vector3Add(box.max, offset);
+}
+
+// == PHYSICS OBJECT ==
+void PhysicsObject::tick(float delta) {
+    core.tick(delta);
+
+    Vector3 position = core.transform().position;
+
+    Vector3 center = {(collision.box.min.x + collision.box.max.x) * 0.5f,
+                      (collision.box.min.y + collision.box.max.y) * 0.5f,
+                      (collision.box.min.z + collision.box.max.z) * 0.5f};
+
+    Vector3 offset = Vector3Subtract(position, center);
+
+    collision.box.min = Vector3Add(collision.box.min, offset);
+    collision.box.max = Vector3Add(collision.box.max, offset);
+}
+void PhysicsObject::resolveCollision(PhysicsObject& other) {
+    collision.update(core.transform());
+    other.collision.update(other.core.transform());
+
+    if (!collision.colliding_with(other.collision))
+        return;
+
+    BoundingBox& a = collision.box;
+    BoundingBox& b = other.collision.box;
+
+    float overlapX = std::min(a.max.x, b.max.x) - std::max(a.min.x, b.min.x);
+    float overlapY = std::min(a.max.y, b.max.y) - std::max(a.min.y, b.min.y);
+    float overlapZ = std::min(a.max.z, b.max.z) - std::max(a.min.z, b.min.z);
+
+    // find the axis with the smallest penetration, that's the axis we'll resolve the collision on.
+    // (aabb)
+    if (overlapX <= overlapY && overlapX <= overlapZ) { // x axis
+        float direction =
+            core.transform().position.x < other.core.transform().position.x ? -1.0f : 1.0f;
+
+        core.transform().moveX(direction * overlapX * 0.5f);
+        other.core.transform().moveX(-direction * overlapX * 0.5f);
+
+        core.velocity.x *= -1.0f;
+        other.core.velocity.x *= -1.0f;
+    } else if (overlapY <= overlapZ) { // y axis
+        float direction =
+            core.transform().position.y < other.core.transform().position.y ? -1.0f : 1.0f;
+
+        core.transform().moveY(direction * overlapY * 0.5f);
+        other.core.transform().moveY(-direction * overlapY * 0.5f);
+
+        core.velocity.y *= -1.0f;
+        other.core.velocity.y *= -1.0f;
+    } else { // z axis
+        float direction =
+            core.transform().position.z < other.core.transform().position.z ? -1.0f : 1.0f;
+
+        core.transform().moveZ(direction * overlapZ * 0.5f);
+        other.core.transform().moveZ(-direction * overlapZ * 0.5f);
+
+        core.velocity.z *= -1.0f;
+        other.core.velocity.z *= -1.0f;
+    }
 }
 
 } // namespace DimEngineZ
