@@ -1,3 +1,4 @@
+#include "../include/common.h"
 #include "raylib.h"
 
 int main() {
@@ -15,34 +16,30 @@ int main() {
     SetTargetFPS(60);
 
     Mesh mesh = GenMeshCube(2.0f, 2.0f, 2.0f);
-    Model cube = LoadModelFromMesh(mesh);
-    float rotation = 0.0f;
+    auto cube = DimEngineZ::DrawObject(
+        mesh, DimEngineZ::Transform({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}));
 
     // 3. Main Application Loop
-    while (!WindowShouldClose()) {
-        // Update variables or handle inputs here
-        //  UpdateCamera(&camera, CAMERA_ORBITAL);
+    DimEngineZ::manager::loop([&]() {
+        float delta = GetFrameTime();
 
         // 4. Render Cycle
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
         BeginMode3D(camera);
-        DrawModelEx(cube, (Vector3){0.0f, 0.0f, 0.0f}, // Position
-                    (Vector3){1.0f, 0.0f, 0.0f},       // Rotation axis
-                    rotation,                          // Rotation angle
-                    (Vector3){1.0f, 1.0f, 1.0f},       // Scale
-                    RED);
+        cube.draw();
         EndMode3D();
 
-        rotation += 1.0f;
+        cube.transform.rotateX(10.0 * delta);
 
         DrawText("Simple 3D Cube with Raylib", 10, 10, 20, DARKGRAY);
         EndDrawing();
-    }
+
+        return "uh oh";
+    });
 
     // 5. Clean up
-    UnloadModel(cube);
     CloseWindow();
     return 0;
 }
