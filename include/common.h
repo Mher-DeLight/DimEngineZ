@@ -38,35 +38,73 @@ struct DrawObject {
     Transform transform;
     Color color;
 
-    DrawObject(const Mesh& mesh_, const Transform& transform_, const Color& color_ = RED)
-        : model(LoadModelFromMesh(mesh_)), transform(transform_), color(color_) {}
+    DrawObject(const Mesh& mesh, const Transform& transform, Color color = RED)
+        : model(LoadModelFromMesh(mesh)), transform(transform), color(color) {}
 
     ~DrawObject() {
         UnloadModel(model);
     }
 
-    void draw() const;
     DrawObject(const DrawObject&) = delete;
     DrawObject& operator=(const DrawObject&) = delete;
+
+    DrawObject(DrawObject&& other) noexcept
+        : model(other.model), transform(other.transform), color(other.color) {
+        other.model = {}; // to prevent other from unloading the same raylib resources
+    }
+    DrawObject& operator=(DrawObject&& other) noexcept {
+        if (this != &other) {
+            UnloadModel(model);
+
+            model = other.model;
+            transform = other.transform;
+            color = other.color;
+
+            other.model = {};
+        }
+
+        return *this;
+    }
+
+    void draw() const;
 };
 struct MovementObject {
-    DrawObject& shape;
-    Transform& transform;
-    Vector3 velocity{0.0f, 0.0f, 0.0f};
+    DrawObject shape;
+
+    Vector3 velocity{0, 0, 0};
     float drag = 0.0f;
     float mass = 1.0f;
 
+    Transform& transform() {
+        return shape.transform;
+    }
+
+    const Transform& transform() const {
+        return shape.transform;
+    }
+
+    MovementObject(DrawObject shape_) : shape(std::move(shape_)) {}
+
     void tick(float delta);
-
     void applyVelocity(const Vector3& applied);
-    void setVelocity(const Vector3& newvelocity);
-
+    void setVelocity(const Vector3& newVelocity);
     void applyAcceleration(const Vector3& applied, float delta);
-
     void applyImpulse(const Vector3& impulse);
     void applyForce(const Vector3& force, float delta);
+};
+struct CollisionBox {
+    BoundingBox box;
 
-    MovementObject(DrawObject& shape_) : shape(shape_), transform(shape.transform) {}
+    bool colliding_with(const CollisionBox& other) const;
+
+    explicit CollisionBox(const BoundingBox& box_) : box(box_) {}
+    explicit CollisionBox(const Model& model) : box(GetModelBoundingBox(model)) {}
+};
+struct PhysicsObject {
+    CollisionBox collision;
+    MovementObject core;
+
+    PhysicsObject(DrawObject shape) : collision(shape.model), core(std::move(shape)) {}
 };
 } // namespace DimEngineZ
 

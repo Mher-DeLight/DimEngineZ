@@ -57,7 +57,7 @@ void DrawObject::draw() const {
 
 // == MOVE OBJECT ==
 void MovementObject::tick(float delta_) {
-    transform.position += velocity * delta_;
+    transform().position += velocity * delta_;
 
     auto applyDrag = [this, delta_](float& v) {
         if (v > 0.0f)
@@ -85,6 +85,11 @@ void MovementObject::applyAcceleration(const Vector3& acceleration, float delta)
 }
 void MovementObject::applyImpulse(const Vector3& impulse) {
     velocity += impulse / mass;
+}
+
+// == COLLISION BOX ==
+bool CollisionBox::colliding_with(const CollisionBox& other) const {
+    return CheckCollisionBoxes(box, other.box);
 }
 
 } // namespace DimEngineZ

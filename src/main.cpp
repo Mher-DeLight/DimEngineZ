@@ -18,7 +18,7 @@ int main() {
     Mesh mesh = GenMeshCube(2.0f, 2.0f, 2.0f);
     auto draw = dez::DrawObject(
         mesh, dez::Transform({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}));
-    auto cube = dez::MovementObject(draw);
+    auto cube = dez::PhysicsObject(std::move(draw));
 
     return dem::fixedloop(
         120, 120,
@@ -26,10 +26,10 @@ int main() {
         // Physics
         [&](float delta) {
             if (IsKeyPressed(KEY_SPACE)) {
-                cube.setVelocity(Vector3({0.0f, 7.5f, 0.0f}));
+                cube.core.setVelocity(Vector3({0.0f, 7.5f, 0.0f}));
             }
-            cube.applyAcceleration(Vector3{0.0f, -9.81f, 0.0f}, delta);
-            cube.tick(delta);
+            cube.core.applyAcceleration(Vector3{0.0f, -9.81f, 0.0f}, delta);
+            cube.core.tick(delta);
 
             return true;
         },
@@ -38,7 +38,7 @@ int main() {
         [&]() {
             return dem::render(RAYWHITE, true, [&]() {
                 BeginMode3D(camera);
-                cube.shape.draw();
+                cube.core.shape.draw();
                 EndMode3D();
 
                 return true;
