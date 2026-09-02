@@ -18,7 +18,7 @@ int main() {
     Mesh mesh = GenMeshCube(2.0f, 2.0f, 2.0f);
     auto draw = dez::DrawObject(
         mesh, dez::Transform({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}));
-    auto cube = dez::MoveObject(draw);
+    auto cube = dez::MovementObject(draw);
 
     return dem::fixedloop(
         120, 120,

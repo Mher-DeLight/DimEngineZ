@@ -56,7 +56,7 @@ void DrawObject::draw() const {
 }
 
 // == MOVE OBJECT ==
-void MoveObject::tick(float delta_) {
+void MovementObject::tick(float delta_) {
     transform.position += velocity * delta_;
 
     auto applyDrag = [this, delta_](float& v) {
@@ -70,20 +70,20 @@ void MoveObject::tick(float delta_) {
     applyDrag(velocity.y);
     applyDrag(velocity.z);
 }
-void MoveObject::applyVelocity(const Vector3& applied) {
+void MovementObject::applyVelocity(const Vector3& applied) {
     velocity += applied;
 }
-void MoveObject::setVelocity(const Vector3& newvelocity) {
+void MovementObject::setVelocity(const Vector3& newvelocity) {
     velocity = newvelocity;
 }
 
-void MoveObject::applyForce(const Vector3& force, float delta) {
+void MovementObject::applyForce(const Vector3& force, float delta) {
     velocity += (force / mass) * delta;
 }
-void MoveObject::applyAcceleration(const Vector3& acceleration, float delta) {
+void MovementObject::applyAcceleration(const Vector3& acceleration, float delta) {
     velocity += acceleration * delta;
 }
-void MoveObject::applyImpulse(const Vector3& impulse) {
+void MovementObject::applyImpulse(const Vector3& impulse) {
     velocity += impulse / mass;
 }
 

@@ -49,7 +49,7 @@ struct DrawObject {
     DrawObject(const DrawObject&) = delete;
     DrawObject& operator=(const DrawObject&) = delete;
 };
-struct MoveObject {
+struct MovementObject {
     DrawObject& shape;
     Transform& transform;
     Vector3 velocity{0.0f, 0.0f, 0.0f};
@@ -66,7 +66,7 @@ struct MoveObject {
     void applyImpulse(const Vector3& impulse);
     void applyForce(const Vector3& force, float delta);
 
-    MoveObject(DrawObject& shape_) : shape(shape_), transform(shape.transform) {}
+    MovementObject(DrawObject& shape_) : shape(shape_), transform(shape.transform) {}
 };
 } // namespace DimEngineZ
 
