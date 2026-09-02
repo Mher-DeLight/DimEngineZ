@@ -164,7 +164,6 @@ void PhysicsObject::resolveCollision(PhysicsObject& other) {
 }
 
 } // namespace DimEngineZ
-
 namespace DimEngineZ::manager {
 using FuncitonCallback = std::function<bool()>;
 using FixedCallback = std::function<bool(float)>;
@@ -215,3 +214,17 @@ bool render(Color background, bool clear, FuncitonCallback func) {
     return code;
 }
 } // namespace DimEngineZ::manager
+namespace DimEngineZ::physics {
+
+void registerObject(PhysicsObject* object) {
+    objects.push_back(object);
+}
+void tick() {
+    for (int i = 0; i < objects.size(); i++) {
+        for (int j = 0; j < objects.size() || j == i; j++) {
+            objects[i]->resolveCollision(*objects[j]);
+        }
+    }
+}
+
+} // namespace DimEngineZ::physics

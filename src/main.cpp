@@ -16,14 +16,14 @@ int main() {
     camera.projection = CAMERA_PERSPECTIVE;         // Camera projection type
 
     Mesh mesh = GenMeshCube(2.0f, 2.0f, 2.0f);
-    auto draw = dez::DrawObject(
-        mesh, dez::Transform({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}), GREEN);
+    auto draw = dez::DrawObject(mesh, dez::Transform(), GREEN);
     auto cube1 = dez::PhysicsObject(std::move(draw));
+    DimEngineZ::physics::registerObject(&cube1);
 
     mesh = GenMeshCube(2.0f, 2.0f, 2.0f);
-    draw = dez::DrawObject(
-        mesh, dez::Transform({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}));
+    draw = dez::DrawObject(mesh, dez::Transform());
     auto cube2 = dez::PhysicsObject(std::move(draw));
+    DimEngineZ::physics::registerObject(&cube2);
 
     cube1.core.transform() = Vector3{-10.0f, 0.0f, 0.0f};
     cube2.core.transform() = Vector3{10.0f, 0.0f, 0.0f};
@@ -54,10 +54,8 @@ int main() {
 
             cube1.core.tick(delta);
             cube2.core.tick(delta);
-            cube1.resolveCollision(cube2);
 
-            std::cout << cube1.core.shape.transform.position.x << std::endl;
-
+            DimEngineZ::physics::tick();
             return true;
         },
 

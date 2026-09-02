@@ -111,7 +111,6 @@ struct PhysicsObject {
     PhysicsObject(DrawObject shape) : collision(shape.model), core(std::move(shape)) {}
 };
 } // namespace DimEngineZ
-
 namespace DimEngineZ::manager {
 
 void initWindow(int width, int height, const std::string& title);
@@ -123,3 +122,8 @@ int fixedloop(int targetFPS, float fixed_delta_inverse, std::function<bool(float
 bool render(Color background, bool clear, FuncitonCallback func);
 
 } // namespace DimEngineZ::manager
+namespace DimEngineZ::physics {
+inline std::vector<PhysicsObject*> objects;
+void registerObject(PhysicsObject* object);
+void tick();
+} // namespace DimEngineZ::physics
