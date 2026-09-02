@@ -104,11 +104,13 @@ struct CollisionBox {
 struct PhysicsObject {
     CollisionBox collision;
     MovementObject core;
+    float bounce = 1.0f;
 
     void resolveCollision(PhysicsObject& other);
     void tick(float delta);
 
-    PhysicsObject(DrawObject shape) : collision(shape.model), core(std::move(shape)) {}
+    PhysicsObject(DrawObject shape, float bounce_ = 1.0f)
+        : collision(shape.model), core(std::move(shape)), bounce(bounce_) {}
 };
 } // namespace DimEngineZ
 namespace DimEngineZ::manager {
@@ -125,5 +127,5 @@ bool render(Color background, bool clear, FuncitonCallback func);
 namespace DimEngineZ::physics {
 inline std::vector<PhysicsObject*> objects;
 void registerObject(PhysicsObject* object);
-void tick();
+void tick(float delta);
 } // namespace DimEngineZ::physics

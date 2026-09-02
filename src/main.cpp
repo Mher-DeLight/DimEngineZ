@@ -17,45 +17,43 @@ int main() {
 
     Mesh mesh = GenMeshCube(2.0f, 2.0f, 2.0f);
     auto draw = dez::DrawObject(mesh, dez::Transform(), GREEN);
-    auto cube1 = dez::PhysicsObject(std::move(draw));
-    DimEngineZ::physics::registerObject(&cube1);
+    auto cube = dez::PhysicsObject(std::move(draw), 0.5f);
+    cube.core.transform().position = Vector3{0.0f, 5.0f, 0.0f};
+    DimEngineZ::physics::registerObject(&cube);
 
-    mesh = GenMeshCube(2.0f, 2.0f, 2.0f);
-    draw = dez::DrawObject(mesh, dez::Transform());
+    mesh = GenMeshCube(20.0f, 1.0f, 20.0f);
+    draw = dez::DrawObject(mesh, dez::Transform({0.0f, -0.5f, 0.0f}), BROWN);
     auto cube2 = dez::PhysicsObject(std::move(draw));
     DimEngineZ::physics::registerObject(&cube2);
-
-    cube1.core.transform() = Vector3{-10.0f, 0.0f, 0.0f};
-    cube2.core.transform() = Vector3{10.0f, 0.0f, 0.0f};
-
-    cube1.core.applyImpulse(Vector3{0.0f, 10.0f, 0.0f});
-    cube2.core.applyImpulse(Vector3{0.0f, 10.0f, 0.0f});
-
-    cube1.core.velocity.x = 5.0f;
-    cube2.core.velocity.x = -5.0f;
 
     return dem::fixedloop(
         120, 120,
 
         // Physics
         [&](float delta) {
+            constexpr int SPEED = 10.0f;
+            constexpr float JUMP_FORCE = 10.0f;
+            constexpr float GRAVITY = -20.0f;
+
             if (IsKeyDown(KEY_RIGHT)) {
-                camera.target.x += 30.0f * delta;
+                cube.core.transform().position.x += SPEED * delta;
             } else if (IsKeyDown(KEY_LEFT)) {
-                camera.target.x -= 30.0f * delta;
+                cube.core.transform().position.x -= SPEED * delta;
             } else if (IsKeyDown(KEY_DOWN)) {
-                camera.target.y -= 30.0f * delta;
+                cube.core.transform().position.z += SPEED * delta;
             } else if (IsKeyDown(KEY_UP)) {
-                camera.target.y += 30.0f * delta;
+                cube.core.transform().position.z -= SPEED * delta;
             }
+            if (IsKeyPressed(KEY_SPACE) && cube.core.transform().position.y <= 0.0f) {
+                cube.core.applyImpulse(Vector3{0.0f, JUMP_FORCE, 0.0f});
+            }
+            cube.core.applyAcceleration(Vector3{0.0f, GRAVITY, 0.0f}, delta);
 
-            cube1.core.applyAcceleration(Vector3{0.0f, -9.81f, 0.0f}, delta);
-            cube2.core.applyAcceleration(Vector3{0.0f, -9.81f, 0.0f}, delta);
+            std::cout << "x: " << cube.core.transform().position.x
+                      << " y: " << cube.core.transform().position.y
+                      << " z: " << cube.core.transform().position.z << std::endl;
 
-            cube1.core.tick(delta);
-            cube2.core.tick(delta);
-
-            DimEngineZ::physics::tick();
+            DimEngineZ::physics::tick(delta);
             return true;
         },
 
@@ -63,7 +61,7 @@ int main() {
         [&]() {
             return dem::render(RAYWHITE, true, [&]() {
                 BeginMode3D(camera);
-                cube1.core.shape.draw();
+                cube.core.shape.draw();
                 cube2.core.shape.draw();
                 EndMode3D();
 

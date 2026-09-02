@@ -140,8 +140,8 @@ void PhysicsObject::resolveCollision(PhysicsObject& other) {
         core.transform().moveX(direction * overlapX * 0.5f);
         other.core.transform().moveX(-direction * overlapX * 0.5f);
 
-        core.velocity.x *= -1.0f;
-        other.core.velocity.x *= -1.0f;
+        core.velocity.x *= -1.0f * bounce;
+        other.core.velocity.x *= -1.0f * bounce;
     } else if (overlapY <= overlapZ) { // y axis
         float direction =
             core.transform().position.y < other.core.transform().position.y ? -1.0f : 1.0f;
@@ -149,8 +149,8 @@ void PhysicsObject::resolveCollision(PhysicsObject& other) {
         core.transform().moveY(direction * overlapY * 0.5f);
         other.core.transform().moveY(-direction * overlapY * 0.5f);
 
-        core.velocity.y *= -1.0f;
-        other.core.velocity.y *= -1.0f;
+        core.velocity.y *= -1.0f * bounce;
+        other.core.velocity.y *= -1.0f * bounce;
     } else { // z axis
         float direction =
             core.transform().position.z < other.core.transform().position.z ? -1.0f : 1.0f;
@@ -158,8 +158,8 @@ void PhysicsObject::resolveCollision(PhysicsObject& other) {
         core.transform().moveZ(direction * overlapZ * 0.5f);
         other.core.transform().moveZ(-direction * overlapZ * 0.5f);
 
-        core.velocity.z *= -1.0f;
-        other.core.velocity.z *= -1.0f;
+        core.velocity.z *= -1.0f * bounce;
+        other.core.velocity.z *= -1.0f * bounce;
     }
 }
 
@@ -215,14 +215,14 @@ bool render(Color background, bool clear, FuncitonCallback func) {
 }
 } // namespace DimEngineZ::manager
 namespace DimEngineZ::physics {
-
 void registerObject(PhysicsObject* object) {
     objects.push_back(object);
 }
-void tick() {
+void tick(float delta) {
     for (int i = 0; i < objects.size(); i++) {
         for (int j = 0; j < objects.size() || j == i; j++) {
             objects[i]->resolveCollision(*objects[j]);
+            objects[i]->tick(delta);
         }
     }
 }
