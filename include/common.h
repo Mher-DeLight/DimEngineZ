@@ -43,6 +43,8 @@ namespace DimEngineZ::manager {
 
 void initWindow(int width, int height, const std::string& title);
 
-using FuncitonCallack = std::function<bool()>;
-int loop(int targetFPS, FuncitonCallack func);
+using FuncitonCallback = std::function<bool()>;
+int loop(int targetFPS, FuncitonCallback func);
+bool render(Color background, bool clear, FuncitonCallback func);
+
 } // namespace DimEngineZ::manager

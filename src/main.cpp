@@ -7,7 +7,6 @@ int main() {
 
     dem::initWindow(800, 600, "3D Cube Renderer");
 
-    // 2. Setup a 3D Perspective Camera
     Camera3D camera = {0};
     camera.position = (Vector3){0.0f, 10.0f, 10.0f}; // Camera position
     camera.target = (Vector3){0.0f, 0.0f, 0.0f};     // Camera looking at point
@@ -19,23 +18,20 @@ int main() {
     auto cube = dez::DrawObject(
         mesh, dez::Transform({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}));
 
-    // 3. Main Application Loop
     return dem::loop(60, [&]() {
         float delta = GetFrameTime();
 
-        // 4. Render Cycle
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
+        bool code = dem::render(RAYWHITE, true, [&]() {
+            BeginMode3D(camera);
+            cube.draw();
+            EndMode3D();
 
-        BeginMode3D(camera);
-        cube.draw();
-        EndMode3D();
+            cube.transform.rotateX(20.0 * delta);
 
-        cube.transform.rotateX(10.0 * delta);
+            DrawText("Simple 3D Cube with Raylib", 10, 10, 20, DARKGRAY);
+            return true;
+        });
 
-        DrawText("Simple 3D Cube with Raylib", 10, 10, 20, DARKGRAY);
-        EndDrawing();
-
-        return true;
+        return code;
     });
 }

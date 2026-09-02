@@ -32,12 +32,12 @@ void DrawObject::draw() const {
 } // namespace DimEngineZ
 
 namespace DimEngineZ::manager {
+using FuncitonCallback = std::function<bool()>;
 
 void initWindow(int width, int height, const std::string& title) {
     InitWindow(width, height, title.c_str());
 }
-
-int loop(int targetFPS, std::function<bool()> func) {
+int loop(int targetFPS, FuncitonCallback func) {
     SetTargetFPS(targetFPS);
     bool status = true;
     while (!WindowShouldClose() && status) {
@@ -45,5 +45,14 @@ int loop(int targetFPS, std::function<bool()> func) {
     }
     CloseWindow();
     return status ? 0 : -1;
+}
+bool render(Color background, bool clear, FuncitonCallback func) {
+    BeginDrawing();
+    if (clear)
+        ClearBackground(background);
+
+    bool code = func();
+    EndDrawing();
+    return code;
 }
 } // namespace DimEngineZ::manager
