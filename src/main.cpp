@@ -2,8 +2,10 @@
 #include "raylib.h"
 
 int main() {
-    // 1. Initialize Window & Context
-    InitWindow(800, 600, "Raylib 3D Example");
+    namespace dez = DimEngineZ;
+    namespace dem = DimEngineZ::manager;
+
+    dem::initWindow(800, 600, "3D Cube Renderer");
 
     // 2. Setup a 3D Perspective Camera
     Camera3D camera = {0};
@@ -13,14 +15,12 @@ int main() {
     camera.fovy = 45.0f;                             // Camera field-of-view Y
     camera.projection = CAMERA_PERSPECTIVE;          // Camera projection type
 
-    SetTargetFPS(60);
-
     Mesh mesh = GenMeshCube(2.0f, 2.0f, 2.0f);
-    auto cube = DimEngineZ::DrawObject(
-        mesh, DimEngineZ::Transform({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}));
+    auto cube = dez::DrawObject(
+        mesh, dez::Transform({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}));
 
     // 3. Main Application Loop
-    return DimEngineZ::manager::loop([&]() {
+    return dem::loop(60, [&]() {
         float delta = GetFrameTime();
 
         // 4. Render Cycle

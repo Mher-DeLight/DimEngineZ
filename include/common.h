@@ -40,6 +40,9 @@ struct DrawObject {
 } // namespace DimEngineZ
 
 namespace DimEngineZ::manager {
+
+void initWindow(int width, int height, const std::string& title);
+
 using FuncitonCallack = std::function<bool()>;
-int loop(FuncitonCallack func);
+int loop(int targetFPS, FuncitonCallack func);
 } // namespace DimEngineZ::manager

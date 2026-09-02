@@ -32,7 +32,13 @@ void DrawObject::draw() const {
 } // namespace DimEngineZ
 
 namespace DimEngineZ::manager {
-int loop(std::function<bool()> func) {
+
+void initWindow(int width, int height, const std::string& title) {
+    InitWindow(width, height, title.c_str());
+}
+
+int loop(int targetFPS, std::function<bool()> func) {
+    SetTargetFPS(targetFPS);
     bool status = true;
     while (!WindowShouldClose() && status) {
         status = func();
