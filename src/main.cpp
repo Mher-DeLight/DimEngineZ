@@ -20,22 +20,27 @@ int main() {
         mesh, dez::Transform({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}));
     auto cube = dez::MoveObject(draw);
 
-    cube.applyImpulse(Vector3({1.0f, 1.0f, 0.0f}));
+    cube.applyImpulse(Vector3({0.0f, 5.0f, 0.0f}));
 
-    return dem::loop(60, [&]() {
-        float delta = GetFrameTime();
+    return dem::fixedloop(
+        120, 120,
 
-        bool code = dem::render(RAYWHITE, true, [&]() {
-            BeginMode3D(camera);
-            cube.shape.draw();
-            EndMode3D();
+        // Physics
+        [&](float delta) {
+            cube.applyAcceleration(Vector3{0.0f, -9.81f, 0.0f}, delta);
+            cube.tick(delta);
 
             return true;
+        },
+
+        // Rendering
+        [&]() {
+            return dem::render(RAYWHITE, true, [&]() {
+                BeginMode3D(camera);
+                cube.shape.draw();
+                EndMode3D();
+
+                return true;
+            });
         });
-
-        cube.applyVelocity(Vector3{0.0f, -0.3f, 0.0});
-        cube.tick(delta);
-
-        return code;
-    });
 }

@@ -76,6 +76,8 @@ void initWindow(int width, int height, const std::string& title);
 
 using FuncitonCallback = std::function<bool()>;
 int loop(int targetFPS, FuncitonCallback func);
+int fixedloop(int targetFPS, float fixed_delta_inverse, std::function<bool(float)> func,
+              FuncitonCallback render);
 bool render(Color background, bool clear, FuncitonCallback func);
 
 } // namespace DimEngineZ::manager

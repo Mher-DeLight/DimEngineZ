@@ -91,6 +91,7 @@ void MoveObject::applyImpulse(const Vector3& impulse) {
 
 namespace DimEngineZ::manager {
 using FuncitonCallback = std::function<bool()>;
+using FixedCallback = std::function<bool(float)>;
 
 void initWindow(int width, int height, const std::string& title) {
     InitWindow(width, height, title.c_str());
@@ -104,6 +105,30 @@ int loop(int targetFPS, FuncitonCallback func) {
     CloseWindow();
     return status ? 0 : -1;
 }
+int fixedloop(int targetFPS, float fixed_delta_inverse, std::function<bool(float)> physics,
+              FuncitonCallback render) {
+    SetTargetFPS(targetFPS);
+
+    const float fixed_delta = 1.0f / fixed_delta_inverse;
+    float accumulator = 0.0f;
+
+    bool status = true;
+
+    while (!WindowShouldClose() && status) {
+        accumulator += GetFrameTime();
+
+        while (accumulator >= fixed_delta) {
+            status = physics(fixed_delta);
+            accumulator -= fixed_delta;
+        }
+        if (status)
+            status = render();
+    }
+
+    CloseWindow();
+    return status ? 0 : -1;
+}
+
 bool render(Color background, bool clear, FuncitonCallback func) {
     BeginDrawing();
     if (clear)
