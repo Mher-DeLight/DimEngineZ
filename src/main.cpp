@@ -1,5 +1,6 @@
 #include "../include/common.h"
 #include "raylib.h"
+#include <iostream>
 
 int main() {
     namespace dez = DimEngineZ;
@@ -15,22 +16,25 @@ int main() {
     camera.projection = CAMERA_PERSPECTIVE;          // Camera projection type
 
     Mesh mesh = GenMeshCube(2.0f, 2.0f, 2.0f);
-    auto cube = dez::DrawObject(
+    auto draw = dez::DrawObject(
         mesh, dez::Transform({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}));
+    auto cube = dez::MoveObject(draw);
+
+    cube.applyImpulse(Vector3({1.0f, 1.0f, 0.0f}));
 
     return dem::loop(60, [&]() {
         float delta = GetFrameTime();
 
         bool code = dem::render(RAYWHITE, true, [&]() {
             BeginMode3D(camera);
-            cube.draw();
+            cube.shape.draw();
             EndMode3D();
 
-            cube.transform.rotateX(20.0 * delta);
-
-            DrawText("Simple 3D Cube with Raylib", 10, 10, 20, DARKGRAY);
             return true;
         });
+
+        cube.applyVelocity(Vector3{0.0f, -0.3f, 0.0});
+        cube.tick(delta);
 
         return code;
     });

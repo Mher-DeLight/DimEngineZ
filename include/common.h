@@ -19,6 +19,16 @@ struct Transform {
     void rotateY(float amount);
     void rotateZ(float amount);
 
+    void move(const Vector3& displacement);
+    void moveX(float amount);
+    void moveY(float amount);
+    void moveZ(float amount);
+
+    void goTo(const Vector3& position);
+    void goToX(float x);
+    void goToY(float y);
+    void goToZ(float z);
+
     Transform(Vector3 position_ = {0.0f, 0.0f, 0.0f}, Vector3 rotation_ = {0.0f, 0.0f, 0.0f},
               Vector3 scale_ = {1.0f, 1.0f, 1.0f})
         : position(position_), rotation(rotation_), scale(scale_) {}
@@ -36,6 +46,27 @@ struct DrawObject {
     }
 
     void draw() const;
+    DrawObject(const DrawObject&) = delete;
+    DrawObject& operator=(const DrawObject&) = delete;
+};
+struct MoveObject {
+    DrawObject& shape;
+    Transform& transform;
+    Vector3 velocity{0.0f, 0.0f, 0.0f};
+    float drag = 0.0f;
+    float mass = 1.0f;
+
+    void tick(float delta);
+
+    void applyVelocity(const Vector3& applied);
+    void setVelocity(const Vector3& newvelocity);
+
+    void applyAcceleration(const Vector3& applied, float delta);
+
+    void applyImpulse(const Vector3& impulse);
+    void applyForce(const Vector3& force, float delta);
+
+    MoveObject(DrawObject& shape_) : shape(shape_), transform(shape.transform) {}
 };
 } // namespace DimEngineZ
 

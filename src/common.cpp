@@ -20,6 +20,32 @@ void Transform::rotateZ(float amount) {
     rotation.z += amount;
 }
 
+void Transform::move(const Vector3& displacement) {
+    position += displacement;
+}
+void Transform::moveX(float amount) {
+    position.x += amount;
+}
+void Transform::moveY(float amount) {
+    position.y += amount;
+}
+void Transform::moveZ(float amount) {
+    position.z += amount;
+}
+
+void Transform::goTo(const Vector3& newposition) {
+    position = newposition;
+}
+void Transform::goToX(float amount) {
+    position.x = amount;
+}
+void Transform::goToY(float amount) {
+    position.y = amount;
+}
+void Transform::goToZ(float amount) {
+    position.z = amount;
+}
+
 // == DRAW OBJECT ==
 void DrawObject::draw() const {
     float angle = transform.rotationMagnitude();
@@ -27,6 +53,38 @@ void DrawObject::draw() const {
     Vector3 axis = {0.0f, 1.0f, 0.0f};
 
     DrawModelEx(model, transform.position, axis, angle, transform.scale, color);
+}
+
+// == MOVE OBJECT ==
+void MoveObject::tick(float delta_) {
+    transform.position += velocity * delta_;
+
+    auto applyDrag = [this, delta_](float& v) {
+        if (v > 0.0f)
+            v = std::max(v - drag * delta_, 0.0f);
+        else if (v < 0.0f)
+            v = std::min(v + drag * delta_, 0.0f);
+    };
+
+    applyDrag(velocity.x);
+    applyDrag(velocity.y);
+    applyDrag(velocity.z);
+}
+void MoveObject::applyVelocity(const Vector3& applied) {
+    velocity += applied;
+}
+void MoveObject::setVelocity(const Vector3& newvelocity) {
+    velocity = newvelocity;
+}
+
+void MoveObject::applyForce(const Vector3& force, float delta) {
+    velocity += (force / mass) * delta;
+}
+void MoveObject::applyAcceleration(const Vector3& acceleration, float delta) {
+    velocity += acceleration * delta;
+}
+void MoveObject::applyImpulse(const Vector3& impulse) {
+    velocity += impulse / mass;
 }
 
 } // namespace DimEngineZ
