@@ -133,6 +133,7 @@ void PhysicsObject::resolveCollision(PhysicsObject& other) {
 
     // find the axis with the smallest penetration, that's the axis we'll resolve the collision on.
     // (aabb)
+    is_on_ground = false;
     if (overlapX <= overlapY && overlapX <= overlapZ) { // x axis
         float direction =
             core.transform().position.x < other.core.transform().position.x ? -1.0f : 1.0f;
@@ -151,6 +152,7 @@ void PhysicsObject::resolveCollision(PhysicsObject& other) {
 
         core.velocity.y *= -1.0f * bounce;
         other.core.velocity.y *= -1.0f * bounce;
+        is_on_ground = true;
     } else { // z axis
         float direction =
             core.transform().position.z < other.core.transform().position.z ? -1.0f : 1.0f;
@@ -220,10 +222,12 @@ void registerObject(PhysicsObject* object) {
 }
 void tick(float delta) {
     for (int i = 0; i < objects.size(); i++) {
-        for (int j = 0; j < objects.size() || j == i; j++) {
+        for (int j = 0; j < objects.size(); j++) {
+            if (j == i)
+                continue;
             objects[i]->resolveCollision(*objects[j]);
-            objects[i]->tick(delta);
         }
+        objects[i]->tick(delta);
     }
 }
 
