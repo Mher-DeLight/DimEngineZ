@@ -27,6 +27,7 @@ int main() {
     ground.is_static = true;
     DimEngineZ::physics::registerObject(&ground);
 
+    Vector3 camdir = Vector3Subtract(camera.target, camera.position);
     return dem::fixedloop(
         120, 120,
 
@@ -35,6 +36,7 @@ int main() {
             constexpr float SPEED = 10.0f;
             constexpr float JUMP_FORCE = 10.0f;
             constexpr float GRAVITY = 20.0f;
+            constexpr float CAM_SPEED = 10.0f;
 
             if (IsKeyDown(KEY_RIGHT)) {
                 player.core.transform().position.x += SPEED * delta;
@@ -46,6 +48,23 @@ int main() {
             } else if (IsKeyDown(KEY_UP)) {
                 player.core.transform().position.z -= SPEED * delta;
             }
+
+            if (IsKeyDown(KEY_D)) {
+                camera.position.x += CAM_SPEED * delta;
+            } else if (IsKeyDown(KEY_A)) {
+                camera.position.x -= CAM_SPEED * delta;
+            }
+            if (IsKeyDown(KEY_S)) {
+                camera.position.z += CAM_SPEED * delta;
+            } else if (IsKeyDown(KEY_W)) {
+                camera.position.z -= CAM_SPEED * delta;
+            }
+            if (IsKeyDown(KEY_Q)) {
+                camera.position.y += CAM_SPEED * delta;
+            } else if (IsKeyDown(KEY_E)) {
+                camera.position.y -= CAM_SPEED * delta;
+            }
+            camera.target = Vector3Add(camera.position, camdir);
 
             if (IsKeyPressed(KEY_SPACE) && player.is_on_ground) {
                 player.core.applyImpulse(Vector3{0.0f, JUMP_FORCE, 0.0f});
