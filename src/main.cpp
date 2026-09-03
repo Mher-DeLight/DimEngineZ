@@ -52,8 +52,6 @@ int main() {
             }
             player.core.applyAcceleration(Vector3{0.0f, -GRAVITY, 0.0f}, delta);
 
-            std::cout << (player.is_on_ground ? "true" : "false") << std::endl;
-
             DimEngineZ::physics::tick(delta);
             return true;
         },
@@ -64,6 +62,8 @@ int main() {
                 BeginMode3D(camera);
                 player.core.shape.draw();
                 ground.core.shape.draw();
+                DrawCubeWires(player.core.transform().position, 2.0f, 2.0f, 2.0f, BLACK);
+                DrawCubeWires(ground.core.transform().position, 20.0f, 1.0f, 20.0f, BLACK);
                 EndMode3D();
 
                 return true;
