@@ -32,7 +32,7 @@ int main() {
 
         // Physics
         [&](float delta) {
-            constexpr int SPEED = 10.0f;
+            constexpr float SPEED = 10.0f;
             constexpr float JUMP_FORCE = 10.0f;
             constexpr float GRAVITY = 20.0f;
 
@@ -51,6 +51,8 @@ int main() {
                 player.core.applyImpulse(Vector3{0.0f, JUMP_FORCE, 0.0f});
             }
             player.core.applyAcceleration(Vector3{0.0f, -GRAVITY, 0.0f}, delta);
+
+            std::cout << (player.is_on_ground ? "true" : "false") << std::endl;
 
             DimEngineZ::physics::tick(delta);
             return true;

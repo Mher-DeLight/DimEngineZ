@@ -104,6 +104,7 @@ void CollisionBox::update(const Transform& transform) {
 
 // == PHYSICS OBJECT ==
 void PhysicsObject::tick(float delta) {
+    is_on_ground = false;
     core.tick(delta);
 
     Vector3 position = core.transform().position;
@@ -234,12 +235,12 @@ void registerObject(PhysicsObject* object) {
 }
 void tick(float delta) {
     for (int i = 0; i < objects.size(); i++) {
+        objects[i]->tick(delta);
         for (int j = 0; j < objects.size(); j++) {
             if (j == i)
                 continue;
             objects[i]->resolveCollision(*objects[j]);
         }
-        objects[i]->tick(delta);
     }
 }
 
