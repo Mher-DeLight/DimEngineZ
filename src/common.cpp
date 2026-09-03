@@ -138,30 +138,42 @@ void PhysicsObject::resolveCollision(PhysicsObject& other) {
         float direction =
             core.transform().position.x < other.core.transform().position.x ? -1.0f : 1.0f;
 
-        core.transform().moveX(direction * overlapX * 0.5f);
-        other.core.transform().moveX(-direction * overlapX * 0.5f);
+        if (!is_static)
+            core.transform().moveX(direction * overlapX * 0.5f);
+        if (!other.is_static)
+            other.core.transform().moveX(-direction * overlapX * 0.5f);
 
-        core.velocity.x *= -1.0f * bounce;
-        other.core.velocity.x *= -1.0f * bounce;
+        if (!is_static)
+            core.velocity.x *= -1.0f * bounce;
+        if (!other.is_static)
+            other.core.velocity.x *= -1.0f * bounce;
     } else if (overlapY <= overlapZ) { // y axis
         float direction =
             core.transform().position.y < other.core.transform().position.y ? -1.0f : 1.0f;
 
-        core.transform().moveY(direction * overlapY * 0.5f);
-        other.core.transform().moveY(-direction * overlapY * 0.5f);
+        if (!is_static)
+            core.transform().moveY(direction * overlapY * 0.5f);
+        if (!other.is_static)
+            other.core.transform().moveY(-direction * overlapY * 0.5f);
 
-        core.velocity.y *= -1.0f * bounce;
-        other.core.velocity.y *= -1.0f * bounce;
+        if (!is_static)
+            core.velocity.y *= -1.0f * bounce;
+        if (!other.is_static)
+            other.core.velocity.y *= -1.0f * bounce;
         is_on_ground = true;
     } else { // z axis
         float direction =
             core.transform().position.z < other.core.transform().position.z ? -1.0f : 1.0f;
 
-        core.transform().moveZ(direction * overlapZ * 0.5f);
-        other.core.transform().moveZ(-direction * overlapZ * 0.5f);
+        if (!is_static)
+            core.transform().moveZ(direction * overlapZ * 0.5f);
+        if (!other.is_static)
+            other.core.transform().moveZ(-direction * overlapZ * 0.5f);
 
-        core.velocity.z *= -1.0f * bounce;
-        other.core.velocity.z *= -1.0f * bounce;
+        if (!is_static)
+            core.velocity.z *= -1.0f * bounce;
+        if (!other.is_static)
+            other.core.velocity.z *= -1.0f * bounce;
     }
 }
 

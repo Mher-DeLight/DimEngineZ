@@ -105,6 +105,7 @@ struct PhysicsObject {
     CollisionBox collision;
     MovementObject core;
     bool is_on_ground = false;
+    bool is_static = false;
     float bounce = 1.0f;
 
     void resolveCollision(PhysicsObject& other);
