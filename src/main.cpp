@@ -32,8 +32,8 @@ int main() {
         // Physics
         [&](float delta) {
             constexpr int SPEED = 10.0f;
-            constexpr float JUMP_FORCE = 50.0f;
-            constexpr float GRAVITY = -20.0f;
+            constexpr float JUMP_FORCE = 10.0f;
+            constexpr float GRAVITY = 20.0f;
 
             if (IsKeyDown(KEY_RIGHT)) {
                 player.core.transform().position.x += SPEED * delta;
@@ -45,7 +45,11 @@ int main() {
             } else if (IsKeyDown(KEY_UP)) {
                 player.core.transform().position.z -= SPEED * delta;
             }
-            player.core.applyAcceleration(Vector3{0.0f, GRAVITY, 0.0f}, delta);
+
+            if (IsKeyPressed(KEY_SPACE) && player.is_on_ground) {
+                player.core.applyImpulse(Vector3{0.0f, JUMP_FORCE, 0.0f});
+            }
+            player.core.applyAcceleration(Vector3{0.0f, -GRAVITY, 0.0f}, delta);
 
             DimEngineZ::physics::tick(delta);
             return true;
