@@ -33,7 +33,7 @@ int main() {
 
         // Physics
         [&](float delta) {
-            constexpr float SPEED = 10.0f;
+            constexpr float SPEED = 12.0f;
             constexpr float JUMP_FORCE = 10.0f;
             constexpr float GRAVITY = 20.0f;
             constexpr float CAM_SPEED = 10.0f;
