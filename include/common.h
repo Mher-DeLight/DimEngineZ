@@ -217,27 +217,3 @@ public:
     void goToZ(float z);
 };
 } // namespace DimEngineZ
-namespace DimEngineZ::physics {
-inline std::vector<PhysicsObject*> objects;
-void resolveCollisionForObject(PhysicsObject* object);
-void registerObject(PhysicsObject* object);
-void tick(float delta);
-} // namespace DimEngineZ::physics
-namespace DimEngineZ::manager {
-
-using managedObject = std::variant<DrawObject*, MovementObject*, PhysicsObject*, Camera*>;
-inline std::vector<managedObject> handledObjects;
-void initWindow(int width, int height, const std::string& title);
-
-using FuncitonCallback = std::function<bool()>;
-int loop(int targetFPS, FuncitonCallback func);
-int fixedloop(int targetFPS, float fixed_delta_inverse, std::function<bool(float)> func,
-              FuncitonCallback render);
-int fixedloop(int targetFPS, std::function<bool(float)> func, FuncitonCallback render);
-bool render(Color background, bool clear, FuncitonCallback func);
-
-void registerObject(managedObject obj);
-void tick(float delta);
-void tickObject(managedObject obj, float delta);
-
-} // namespace DimEngineZ::manager
