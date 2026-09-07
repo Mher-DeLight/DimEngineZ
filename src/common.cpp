@@ -4,6 +4,14 @@
 
 namespace DimEngineZ {
 
+// == VEC3 ==
+float Vec3::magnitude() const {
+    return Vector3Length(vec);
+}
+Vector3 Vec3::normalize() const {
+    return Vector3Normalize(vec);
+}
+
 // == TRANSFORM ==
 float Transform::magnitude() const {
     return Vector3Length(position);

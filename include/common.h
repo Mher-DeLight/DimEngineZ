@@ -7,6 +7,42 @@
 
 namespace DimEngineZ {
 
+struct Vec3 {
+private:
+    Vector3 vec;
+
+public:
+    float& x;
+    float& y;
+    float& z;
+
+    Vec3(float x_ = 0.0f, float y_ = 0.0f, float z_ = 0.0f)
+        : vec{x_, y_, z_}, x(vec.x), y(vec.y), z(vec.z) {}
+    Vec3(const Vector3& initvec) : vec(initvec), x(vec.x), y(vec.y), z(vec.z) {}
+    Vec3(std::initializer_list<float> lst)
+        : vec{*(lst.begin()), *(lst.begin() + 1), *(lst.begin() + 2)}, x(vec.x), y(vec.y),
+          z(vec.z) {}
+
+    float magnitude() const;
+    Vector3 normalize() const;
+
+    Vec3 operator+(const Vec3& other) {
+        return Vec3(other.vec + vec);
+    }
+    Vec3 operator-(const Vec3& other) {
+        return Vec3(other.vec - vec);
+    }
+    Vec3 operator*(const Vec3& other) {
+        return Vec3(other.vec * vec);
+    }
+    Vec3 operator/(const Vec3& other) {
+        return Vec3(other.vec / vec);
+    }
+
+    operator const Vector3&() const {
+        return vec;
+    }
+};
 struct Transform {
     Vector3 position{0.0f, 0.0f, 0.0f};
     Vector3 rotation{0.0f, 0.0f, 0.0f};
