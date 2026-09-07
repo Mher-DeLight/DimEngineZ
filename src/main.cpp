@@ -14,13 +14,12 @@ int main() {
     auto draw = dez::DrawObject(mesh, dez::Transform(), GREEN);
     auto player = dez::PhysicsObject(std::move(draw), 0.5f);
     player.core.transform().position = Vector3{0.0f, 5.0f, 0.0f};
-    DimEngineZ::physics::registerObject(&player);
+    // DimEngineZ::physics::registerObject(&player);
 
     mesh = GenMeshCube(20.0f, 1.0f, 20.0f);
     draw = dez::DrawObject(mesh, dez::Transform({0.0f, -0.5f, 0.0f}), BROWN);
     auto ground = dez::PhysicsObject(std::move(draw));
     ground.is_static = true;
-    DimEngineZ::physics::registerObject(&ground);
 
     return dem::fixedloop(
         60,
@@ -64,7 +63,7 @@ int main() {
             }
             player.core.applyAcceleration(Vector3{0.0f, -GRAVITY, 0.0f}, delta);
 
-            DimEngineZ::physics::tick(delta);
+            DimEngineZ::manager::tick(delta);
             return true;
         },
 

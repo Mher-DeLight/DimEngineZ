@@ -3,6 +3,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <string>
+#include <variant>
 #include <vector>
 
 namespace DimEngineZ {
@@ -91,7 +92,9 @@ struct DrawObject {
     Color color;
 
     DrawObject(const Mesh& mesh, const Transform& transform, Color color = RED)
-        : model(LoadModelFromMesh(mesh)), transform(transform), color(color) {}
+        : model(LoadModelFromMesh(mesh)), transform(transform), color(color) {
+        selfRegister();
+    }
 
     ~DrawObject() {
         UnloadModel(model);
@@ -119,6 +122,9 @@ struct DrawObject {
     }
 
     void draw() const;
+
+private:
+    void selfRegister();
 };
 struct MovementObject {
     DrawObject shape;
@@ -164,7 +170,12 @@ struct PhysicsObject {
     void tick(float delta);
 
     PhysicsObject(DrawObject shape, float bounce_ = 1.0f)
-        : collision(shape.model), core(std::move(shape)), bounce(bounce_) {}
+        : collision(shape.model), core(std::move(shape)), bounce(bounce_) {
+        selfRegister();
+    }
+
+private:
+    void selfRegister();
 };
 
 struct Camera {
@@ -206,8 +217,16 @@ public:
     void goToZ(float z);
 };
 } // namespace DimEngineZ
+namespace DimEngineZ::physics {
+inline std::vector<PhysicsObject*> objects;
+void resolveCollisionForObject(PhysicsObject* object);
+void registerObject(PhysicsObject* object);
+void tick(float delta);
+} // namespace DimEngineZ::physics
 namespace DimEngineZ::manager {
 
+using managedObject = std::variant<DrawObject*, MovementObject*, PhysicsObject*, Camera*>;
+inline std::vector<managedObject> handledObjects;
 void initWindow(int width, int height, const std::string& title);
 
 using FuncitonCallback = std::function<bool()>;
@@ -217,9 +236,8 @@ int fixedloop(int targetFPS, float fixed_delta_inverse, std::function<bool(float
 int fixedloop(int targetFPS, std::function<bool(float)> func, FuncitonCallback render);
 bool render(Color background, bool clear, FuncitonCallback func);
 
-} // namespace DimEngineZ::manager
-namespace DimEngineZ::physics {
-inline std::vector<PhysicsObject*> objects;
-void registerObject(PhysicsObject* object);
+void registerObject(managedObject obj);
 void tick(float delta);
-} // namespace DimEngineZ::physics
+void tickObject(managedObject obj, float delta);
+
+} // namespace DimEngineZ::manager

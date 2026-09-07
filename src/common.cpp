@@ -1,6 +1,7 @@
 #include "../include/common.h"
 #include <iostream>
 #include <stdexcept>
+#include <variant>
 
 namespace DimEngineZ {
 
@@ -62,6 +63,9 @@ void DrawObject::draw() const {
     Vector3 axis = {0.0f, 1.0f, 0.0f};
 
     DrawModelEx(model, transform.position, axis, angle, transform.scale, color);
+}
+void DrawObject::selfRegister() {
+    manager::registerObject(manager::managedObject(this));
 }
 
 // == MOVE OBJECT ==
@@ -185,6 +189,10 @@ void PhysicsObject::resolveCollision(PhysicsObject& other) {
             other.core.velocity.z *= -1.0f * bounce;
     }
 }
+void PhysicsObject::selfRegister() {
+    physics::registerObject(this);
+    manager::registerObject(manager::managedObject(this));
+}
 
 // == CAMERA ==
 void Camera::refreshTarget() {
@@ -295,19 +303,51 @@ bool render(Color background, bool clear, FuncitonCallback func) {
     EndDrawing();
     return code;
 }
+
+void registerObject(managedObject obj) {
+    handledObjects.push_back(obj);
+    if (std::holds_alternative<PhysicsObject*>(obj)) {
+        // register at the physics registry too
+        physics::registerObject(std::get<PhysicsObject*>(obj));
+    }
+}
+void tick(float delta) {
+    for (auto& obj : handledObjects) {
+        tickObject(obj, delta);
+    }
+}
+void tickObject(managedObject obj, float delta) {
+    if (std::holds_alternative<PhysicsObject*>(obj)) {
+        auto cst = std::get<PhysicsObject*>(obj);
+        cst->tick(delta);
+        physics::resolveCollisionForObject(cst);
+    } else if (std::holds_alternative<DrawObject*>(obj)) {
+        auto cst = std::get<DrawObject*>(obj);
+        cst->draw();
+    } else if (std::holds_alternative<MovementObject*>(obj)) {
+        auto cst = std::get<MovementObject*>(obj);
+        cst->shape.draw();
+    } else {
+        throw std::runtime_error("DimEngineZ: invalid type in handledObjects for object handler");
+    }
+}
+
 } // namespace DimEngineZ::manager
 namespace DimEngineZ::physics {
+void resolveCollisionForObject(PhysicsObject* object) {
+    for (int j = 0; j < objects.size(); j++) {
+        if (objects[j] == object)
+            continue;
+        object->resolveCollision(*objects[j]);
+    }
+}
 void registerObject(PhysicsObject* object) {
     objects.push_back(object);
 }
 void tick(float delta) {
     for (int i = 0; i < objects.size(); i++) {
         objects[i]->tick(delta);
-        for (int j = 0; j < objects.size(); j++) {
-            if (j == i)
-                continue;
-            objects[i]->resolveCollision(*objects[j]);
-        }
+        resolveCollisionForObject(objects[i]);
     }
 }
 
