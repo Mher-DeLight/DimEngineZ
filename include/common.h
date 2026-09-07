@@ -114,6 +114,45 @@ struct PhysicsObject {
     PhysicsObject(DrawObject shape, float bounce_ = 1.0f)
         : collision(shape.model), core(std::move(shape)), bounce(bounce_) {}
 };
+
+struct Camera {
+private:
+    Camera3D cam;
+
+public:
+    Vector3& position;
+    Vector3& up;
+    Vector3 direction;
+    float fovy = 90.0f;
+    int& projection;
+
+    Camera(const Vector3& position_, float fovy_, const Vector3& direction,
+           int projection_ = CAMERA_PERSPECTIVE, const Vector3& up_ = Vector3{0.0f, 1.0f, 0.0f})
+        : position(cam.position), up(cam.up), fovy(cam.fovy), projection(cam.projection),
+          direction(direction) {
+        cam.position = position_;
+        cam.fovy = fovy_;
+        cam.target = position_ + direction;
+        cam.projection = projection_;
+        cam.up = up_;
+    }
+
+    operator const Camera3D&() const {
+        return cam;
+    }
+
+    void refreshTarget();
+
+    void move(const Vector3& amount);
+    void moveX(float amount);
+    void moveY(float amount);
+    void moveZ(float amount);
+
+    void goTo(const Vector3& pos);
+    void goToX(float x);
+    void goToY(float y);
+    void goToZ(float z);
+};
 } // namespace DimEngineZ
 namespace DimEngineZ::manager {
 

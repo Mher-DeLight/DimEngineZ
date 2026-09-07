@@ -8,12 +8,7 @@ int main() {
 
     dem::initWindow(1000, 800, "3D Cube Renderer");
 
-    Camera3D camera = {0};
-    camera.position = (Vector3){0.0f, 5.0f, 10.0f}; // Camera position
-    camera.target = (Vector3){0.0f, 0.0f, 0.0f};    // Camera looking at point
-    camera.up = (Vector3){0.0f, 1.0f, 0.0f};        // Camera up vector (rotation axis)
-    camera.fovy = 90.0f;                            // Camera field-of-view Y
-    camera.projection = CAMERA_PERSPECTIVE;         // Camera projection type
+    dez::Camera camera({0.0f, 7.5f, 10.0f}, 90.0f, {0.0f, -1.0f, -1.0f});
 
     Mesh mesh = GenMeshCube(2.0f, 2.0f, 2.0f);
     auto draw = dez::DrawObject(mesh, dez::Transform(), GREEN);
@@ -27,7 +22,6 @@ int main() {
     ground.is_static = true;
     DimEngineZ::physics::registerObject(&ground);
 
-    Vector3 camdir = Vector3Subtract(camera.target, camera.position);
     return dem::fixedloop(
         120, 120,
 
@@ -50,21 +44,20 @@ int main() {
             }
 
             if (IsKeyDown(KEY_D)) {
-                camera.position.x += CAM_SPEED * delta;
+                camera.moveX(CAM_SPEED * delta);
             } else if (IsKeyDown(KEY_A)) {
-                camera.position.x -= CAM_SPEED * delta;
+                camera.moveX(-CAM_SPEED * delta);
             }
             if (IsKeyDown(KEY_S)) {
-                camera.position.z += CAM_SPEED * delta;
+                camera.moveZ(CAM_SPEED * delta);
             } else if (IsKeyDown(KEY_W)) {
-                camera.position.z -= CAM_SPEED * delta;
+                camera.moveZ(-CAM_SPEED * delta);
             }
             if (IsKeyDown(KEY_Q)) {
-                camera.position.y += CAM_SPEED * delta;
+                camera.moveY(CAM_SPEED * delta);
             } else if (IsKeyDown(KEY_E)) {
-                camera.position.y -= CAM_SPEED * delta;
+                camera.moveY(-CAM_SPEED * delta);
             }
-            camera.target = Vector3Add(camera.position, camdir);
 
             if (IsKeyPressed(KEY_SPACE) && player.is_on_ground) {
                 player.core.applyImpulse(Vector3{0.0f, JUMP_FORCE, 0.0f});

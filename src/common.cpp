@@ -178,6 +178,43 @@ void PhysicsObject::resolveCollision(PhysicsObject& other) {
     }
 }
 
+// == CAMERA ==
+void Camera::refreshTarget() {
+    cam.target = cam.position + Vector3Normalize(direction);
+}
+void Camera::move(const Vector3& amount) {
+    position += amount;
+    refreshTarget();
+}
+void Camera::moveX(float amount) {
+    position.x += amount;
+    refreshTarget();
+}
+void Camera::moveY(float amount) {
+    position.y += amount;
+    refreshTarget();
+}
+void Camera::moveZ(float amount) {
+    position.z += amount;
+    refreshTarget();
+}
+void Camera::goTo(const Vector3& amount) {
+    position = amount;
+    refreshTarget();
+}
+void Camera::goToX(float amount) {
+    position.x = amount;
+    refreshTarget();
+}
+void Camera::goToY(float amount) {
+    position.y = amount;
+    refreshTarget();
+}
+void Camera::goToZ(float amount) {
+    position.z = amount;
+    refreshTarget();
+}
+
 } // namespace DimEngineZ
 namespace DimEngineZ::manager {
 using FuncitonCallback = std::function<bool()>;
