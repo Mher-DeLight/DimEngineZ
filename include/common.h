@@ -22,6 +22,7 @@ public:
     Vec3(std::initializer_list<float> lst)
         : vec{*(lst.begin()), *(lst.begin() + 1), *(lst.begin() + 2)}, x(vec.x), y(vec.y),
           z(vec.z) {}
+    Vec3(const Vec3& other) : vec(other.vec), x(vec.x), y(vec.y), z(vec.z) {}
 
     float magnitude() const;
     Vector3 normalize() const;
@@ -38,15 +39,30 @@ public:
     Vec3 operator/(const Vec3& other) {
         return Vec3(other.vec / vec);
     }
+    Vec3 operator*(float scalar) {
+        return Vec3(vec * scalar);
+    }
+    Vec3 operator/(float scalar) {
+        return Vec3(vec / scalar);
+    }
+
+    Vec3& operator=(const Vec3& other) {
+        vec = other.vec;
+        return *this;
+    }
+    Vec3 operator+=(const Vec3& other) {
+        vec += other.vec;
+        return *this;
+    }
 
     operator const Vector3&() const {
         return vec;
     }
 };
 struct Transform {
-    Vector3 position{0.0f, 0.0f, 0.0f};
-    Vector3 rotation{0.0f, 0.0f, 0.0f};
-    Vector3 scale{1.0f, 1.0f, 1.0f};
+    Vec3 position{0.0f, 0.0f, 0.0f};
+    Vec3 rotation{0.0f, 0.0f, 0.0f};
+    Vec3 scale{1.0f, 1.0f, 1.0f};
 
     float magnitude() const;
     float rotationMagnitude() const;
@@ -107,7 +123,7 @@ struct DrawObject {
 struct MovementObject {
     DrawObject shape;
 
-    Vector3 velocity{0, 0, 0};
+    Vec3 velocity{0, 0, 0};
     float drag = 0.0f;
     float mass = 1.0f;
 
