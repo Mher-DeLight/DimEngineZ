@@ -255,6 +255,28 @@ int fixedloop(int targetFPS, float fixed_delta_inverse, std::function<bool(float
     CloseWindow();
     return status ? 0 : -1;
 }
+int fixedloop(int targetFPS, std::function<bool(float)> physics, FuncitonCallback render) {
+    SetTargetFPS(targetFPS);
+
+    const float fixed_delta = 1.0f / targetFPS;
+    float accumulator = 0.0f;
+
+    bool status = true;
+
+    while (!WindowShouldClose() && status) {
+        accumulator += GetFrameTime();
+
+        while (accumulator >= fixed_delta) {
+            status = physics(fixed_delta);
+            accumulator -= fixed_delta;
+        }
+        if (status)
+            status = render();
+    }
+
+    CloseWindow();
+    return status ? 0 : -1;
+}
 
 bool render(Color background, bool clear, FuncitonCallback func) {
     BeginDrawing();

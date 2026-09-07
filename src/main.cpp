@@ -23,7 +23,7 @@ int main() {
     DimEngineZ::physics::registerObject(&ground);
 
     return dem::fixedloop(
-        120, 120,
+        60,
 
         // Physics
         [&](float delta) {
