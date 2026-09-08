@@ -178,6 +178,13 @@ private:
     void selfRegister();
 };
 
+struct CameraOptions {
+    float fovy = 90.0f;
+    Vector3 direction = Vector3{0.0f, 0.0f, 0.0f};
+    int projection = CAMERA_PERSPECTIVE;
+    Vector3 up = Vector3{0.0f, 1.0f, 0.0f};
+};
+
 struct Camera {
 private:
     Camera3D cam;
@@ -189,15 +196,17 @@ public:
     float fovy = 90.0f;
     int& projection;
 
-    Camera(const Vector3& position_, float fovy_, const Vector3& direction,
-           int projection_ = CAMERA_PERSPECTIVE, const Vector3& up_ = Vector3{0.0f, 1.0f, 0.0f})
+    Camera(const Vector3& position_, const CameraOptions& opts = CameraOptions(),
+           bool is_main = false)
         : position(cam.position), up(cam.up), fovy(cam.fovy), projection(cam.projection),
           direction(direction) {
         cam.position = position_;
-        cam.fovy = fovy_;
-        cam.target = position_ + direction;
-        cam.projection = projection_;
-        cam.up = up_;
+        cam.fovy = opts.fovy;
+        cam.target = position_ + opts.direction;
+        cam.projection = opts.projection;
+        cam.up = opts.up;
+        if (is_main)
+            makeMain();
     }
 
     operator const Camera3D&() const {
@@ -208,6 +217,7 @@ public:
     }
 
     void refreshTarget();
+    void makeMain();
 
     void move(const Vector3& amount);
     void moveX(float amount);

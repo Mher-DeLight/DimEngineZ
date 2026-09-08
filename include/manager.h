@@ -1,7 +1,10 @@
 #pragma once
 #include "physics.h"
+#include <optional>
+#define MAIN_CAMERA true
 
 namespace DimEngineZ::manager {
+inline std::optional<std::reference_wrapper<Camera>> mainCamera;
 
 using managedObject = std::variant<DrawObject*, MovementObject*, PhysicsObject*, Camera*>;
 inline std::vector<managedObject> handledObjects;
@@ -17,7 +20,7 @@ bool render(Color background, bool clear, FuncitonCallback func);
 int main(int targetFPS, std::function<bool(float)> func);
 
 void registerObject(managedObject obj);
-void tick(float delta, Camera& cam);
+void tick(float delta);
 void tickObject(managedObject obj, float delta);
 void drawObject(managedObject obj);
 

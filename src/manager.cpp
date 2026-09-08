@@ -1,4 +1,5 @@
 #include "../include/manager.h"
+#include <optional>
 #include <stdexcept>
 
 namespace DimEngineZ::manager {
@@ -102,13 +103,16 @@ void registerObject(managedObject obj) {
         physics::registerObject(std::get<PhysicsObject*>(obj));
     }
 }
-void tick(float delta, Camera& cam) {
+void tick(float delta) {
     for (auto& obj : handledObjects) {
         tickObject(obj, delta);
     }
 
     ClearBackground(RAYWHITE);
-    BeginMode3D(cam);
+    if (!mainCamera.has_value()) {
+        throw std::runtime_error("DimEngineZ: invalid render cycle; no main camera assigned");
+    }
+    BeginMode3D(mainCamera->get());
     for (auto& obj : handledObjects) {
         drawObject(obj);
     }

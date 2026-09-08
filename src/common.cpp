@@ -199,6 +199,10 @@ void PhysicsObject::selfRegister() {
 void Camera::refreshTarget() {
     cam.target = cam.position + Vector3Normalize(direction);
 }
+void Camera::makeMain() {
+    manager::mainCamera = *this;
+}
+
 void Camera::move(const Vector3& amount) {
     position += amount;
     refreshTarget();

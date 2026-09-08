@@ -8,7 +8,9 @@ int main() {
 
     dem::initWindow(1000, 800, "3D Cube Renderer");
 
-    dez::Camera camera({0.0f, 7.5f, 10.0f}, 90.0f, {0.0f, -1.0f, -1.0f});
+    dez::Camera camera({0.0f, 7.5f, 10.0f},
+                       dez::CameraOptions{.fovy = 90.0f, .direction = {0.0f, -1.0f, -1.0f}},
+                       MAIN_CAMERA);
 
     Mesh mesh = GenMeshCube(2.0f, 2.0f, 2.0f);
     auto draw = dez::DrawObject(mesh, dez::Transform(), GREEN);
@@ -58,7 +60,11 @@ int main() {
         }
         player.core.applyAcceleration(Vector3{0.0f, -GRAVITY, 0.0f}, delta);
 
-        DimEngineZ::manager::tick(delta, camera);
+        if (IsKeyPressed(KEY_Q)) {
+            return false; // exit
+        }
+
+        DimEngineZ::manager::tick(delta);
         return true;
     });
 }
