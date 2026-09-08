@@ -4,9 +4,8 @@
 
 int main() {
     namespace dez = DimEngineZ;
-    namespace dem = DimEngineZ::manager;
 
-    dem::initWindow(1000, 800, "3D Cube Renderer");
+    dez::manager::initWindow(1000, 800, "3D Cube Renderer");
 
     dez::Camera camera({0.0f, 7.5f, 10.0f},
                        dez::CameraOptions{.fovy = 90.0f, .direction = {0.0f, -1.0f, -1.0f}},
@@ -22,7 +21,7 @@ int main() {
     auto ground = dez::PhysicsObject(std::move(draw));
     ground.is_static = true;
 
-    return dem::main(60, [&](float delta) {
+    return dez::manager::main(60, [&](float delta) {
         constexpr float SPEED = 12.0f;
         constexpr float JUMP_FORCE = 10.0f;
         constexpr float GRAVITY = 20.0f;
@@ -37,22 +36,6 @@ int main() {
             player.core.transform().position.z += SPEED * delta;
         } else if (IsKeyDown(KEY_UP)) {
             player.core.transform().position.z -= SPEED * delta;
-        }
-
-        if (IsKeyDown(KEY_D)) {
-            camera.moveX(CAM_SPEED * delta);
-        } else if (IsKeyDown(KEY_A)) {
-            camera.moveX(-CAM_SPEED * delta);
-        }
-        if (IsKeyDown(KEY_S)) {
-            camera.moveZ(CAM_SPEED * delta);
-        } else if (IsKeyDown(KEY_W)) {
-            camera.moveZ(-CAM_SPEED * delta);
-        }
-        if (IsKeyDown(KEY_Q)) {
-            camera.moveY(CAM_SPEED * delta);
-        } else if (IsKeyDown(KEY_E)) {
-            camera.moveY(-CAM_SPEED * delta);
         }
 
         if (IsKeyPressed(KEY_SPACE) && player.is_on_ground) {

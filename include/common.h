@@ -199,7 +199,7 @@ public:
     Camera(const Vector3& position_, const CameraOptions& opts = CameraOptions(),
            bool is_main = false)
         : position(cam.position), up(cam.up), fovy(cam.fovy), projection(cam.projection),
-          direction(direction) {
+          direction(opts.direction) {
         cam.position = position_;
         cam.fovy = opts.fovy;
         cam.target = position_ + opts.direction;
