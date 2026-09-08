@@ -7,14 +7,14 @@ int main() {
 
     dez::manager::initWindow(1000, 800, "3D Cube Renderer");
 
-    dez::Camera camera({0.0f, 15.0f, 10.0f},
+    dez::Camera camera({0.0f, 2.0f, 20.0f},
                        dez::CameraOptions{.fovy = 90.0f, .direction = {0.0f, -1.0f, -1.0f}},
                        MAIN_CAMERA);
     camera.setTarget(Vector3{0.0f, 0.0f, 0.0f});
 
     Mesh mesh = GenMeshCube(2.0f, 2.0f, 2.0f);
     auto draw = dez::DrawObject(mesh, dez::Transform(), GREEN);
-    auto object = dez::PhysicsObject(std::move(draw), 0.5f);
+    auto object = dez::PhysicsObject(std::move(draw), 0.0f);
     object.transform.position = Vector3{0.0f, 5.0f, 0.0f};
 
     mesh = GenMeshCube(20.0f, 1.0f, 20.0f);
@@ -23,7 +23,7 @@ int main() {
     ground.is_static = true;
 
     return dez::manager::main(60, [&](float delta) {
-        constexpr float LAUNCH_FORCE = 20.0f;
+        constexpr float LAUNCH_FORCE = 15.0f;
         constexpr float GRAVITY = 9.81f;
 
         if (IsKeyPressed(KEY_SPACE) && object.is_on_ground) {
@@ -34,7 +34,6 @@ int main() {
         if (IsKeyPressed(KEY_Q)) {
             return false; // exit
         }
-        camera.setTarget(object.transform.position);
 
         DimEngineZ::manager::tick(delta);
         return true;

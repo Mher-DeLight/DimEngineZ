@@ -152,10 +152,10 @@ void PhysicsObject::resolveCollision(PhysicsObject& other) {
         float direction =
             core.transform().position.x < other.core.transform().position.x ? -1.0f : 1.0f;
 
-        if (!is_static)
-            core.transform().moveX(direction * overlapX * 0.5f);
-        if (!other.is_static)
-            other.core.transform().moveX(-direction * overlapX * 0.5f);
+        core.transform().moveX(direction * overlapX * (other.is_static ? 1.0f : 0.5f) *
+                               static_cast<int>(!is_static));
+        other.core.transform().moveX(-direction * overlapX * (is_static ? 1.0f : 0.5f) *
+                                     static_cast<int>(!other.is_static));
 
         if (!is_static)
             core.velocity.x *= -1.0f * bounce;
@@ -165,10 +165,10 @@ void PhysicsObject::resolveCollision(PhysicsObject& other) {
         float direction =
             core.transform().position.y < other.core.transform().position.y ? -1.0f : 1.0f;
 
-        if (!is_static)
-            core.transform().moveY(direction * overlapY * 0.5f);
-        if (!other.is_static)
-            other.core.transform().moveY(-direction * overlapY * 0.5f);
+        core.transform().moveY(direction * overlapY * (other.is_static ? 1.0f : 0.5f) *
+                               static_cast<int>(!is_static));
+        other.core.transform().moveY(-direction * overlapY * (is_static ? 1.0f : 0.5f) *
+                                     static_cast<int>(!other.is_static));
 
         if (!is_static)
             core.velocity.y *= -1.0f * bounce;
@@ -180,10 +180,10 @@ void PhysicsObject::resolveCollision(PhysicsObject& other) {
         float direction =
             core.transform().position.z < other.core.transform().position.z ? -1.0f : 1.0f;
 
-        if (!is_static)
-            core.transform().moveZ(direction * overlapZ * 0.5f);
-        if (!other.is_static)
-            other.core.transform().moveZ(-direction * overlapZ * 0.5f);
+        core.transform().moveZ(direction * overlapZ * (other.is_static ? 1.0f : 0.5f) *
+                               static_cast<int>(!is_static));
+        other.core.transform().moveZ(-direction * overlapZ * (is_static ? 1.0f : 0.5f) *
+                                     static_cast<int>(!other.is_static));
 
         if (!is_static)
             core.velocity.z *= -1.0f * bounce;
