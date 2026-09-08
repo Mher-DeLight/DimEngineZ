@@ -7,14 +7,15 @@ int main() {
 
     dez::manager::initWindow(1000, 800, "3D Cube Renderer");
 
-    dez::Camera camera({0.0f, 7.5f, 10.0f},
+    dez::Camera camera({0.0f, 15.0f, 10.0f},
                        dez::CameraOptions{.fovy = 90.0f, .direction = {0.0f, -1.0f, -1.0f}},
                        MAIN_CAMERA);
+    camera.setTarget(Vector3{0.0f, 0.0f, 0.0f});
 
     Mesh mesh = GenMeshCube(2.0f, 2.0f, 2.0f);
     auto draw = dez::DrawObject(mesh, dez::Transform(), GREEN);
-    auto player = dez::PhysicsObject(std::move(draw), 0.5f);
-    player.transform.position = Vector3{0.0f, 5.0f, 0.0f};
+    auto object = dez::PhysicsObject(std::move(draw), 0.5f);
+    object.transform.position = Vector3{0.0f, 5.0f, 0.0f};
 
     mesh = GenMeshCube(20.0f, 1.0f, 20.0f);
     draw = dez::DrawObject(mesh, dez::Transform({0.0f, -0.5f, 0.0f}), BROWN);
@@ -22,30 +23,18 @@ int main() {
     ground.is_static = true;
 
     return dez::manager::main(60, [&](float delta) {
-        constexpr float SPEED = 12.0f;
-        constexpr float JUMP_FORCE = 10.0f;
-        constexpr float GRAVITY = 20.0f;
-        constexpr float CAM_SPEED = 10.0f;
+        constexpr float LAUNCH_FORCE = 20.0f;
+        constexpr float GRAVITY = 9.81f;
 
-        if (IsKeyDown(KEY_RIGHT)) {
-            player.transform.position.x += SPEED * delta;
-        } else if (IsKeyDown(KEY_LEFT)) {
-            player.transform.position.x -= SPEED * delta;
+        if (IsKeyPressed(KEY_SPACE) && object.is_on_ground) {
+            object.core.applyImpulse(Vector3{0.0f, LAUNCH_FORCE, 0.0f});
         }
-        if (IsKeyDown(KEY_DOWN)) {
-            player.transform.position.z += SPEED * delta;
-        } else if (IsKeyDown(KEY_UP)) {
-            player.transform.position.z -= SPEED * delta;
-        }
-
-        if (IsKeyPressed(KEY_SPACE) && player.is_on_ground) {
-            player.core.applyImpulse(Vector3{0.0f, JUMP_FORCE, 0.0f});
-        }
-        player.core.applyAcceleration(Vector3{0.0f, -GRAVITY, 0.0f}, delta);
+        object.core.applyAcceleration(Vector3{0.0f, -GRAVITY, 0.0f}, delta);
 
         if (IsKeyPressed(KEY_Q)) {
             return false; // exit
         }
+        camera.setTarget(object.transform.position);
 
         DimEngineZ::manager::tick(delta);
         return true;

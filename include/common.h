@@ -220,6 +220,7 @@ public:
 
     void refreshTarget();
     void makeMain();
+    void setTarget(const Vector3& position);
 
     void move(const Vector3& amount);
     void moveX(float amount);

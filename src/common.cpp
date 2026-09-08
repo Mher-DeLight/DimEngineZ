@@ -203,6 +203,10 @@ void Camera::refreshTarget() {
 void Camera::makeMain() {
     manager::mainCamera = *this;
 }
+void Camera::setTarget(const Vector3& target) {
+    cam.target = target;
+    direction = target - position;
+}
 
 void Camera::move(const Vector3& amount) {
     position += amount;
