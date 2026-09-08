@@ -174,7 +174,8 @@ void PhysicsObject::resolveCollision(PhysicsObject& other) {
             core.velocity.y *= -1.0f * bounce;
         if (!other.is_static)
             other.core.velocity.y *= -1.0f * bounce;
-        is_on_ground = true;
+        if (direction > 0.0f)
+            is_on_ground = true;
     } else { // z axis
         float direction =
             core.transform().position.z < other.core.transform().position.z ? -1.0f : 1.0f;

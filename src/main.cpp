@@ -14,7 +14,7 @@ int main() {
     Mesh mesh = GenMeshCube(2.0f, 2.0f, 2.0f);
     auto draw = dez::DrawObject(mesh, dez::Transform(), GREEN);
     auto player = dez::PhysicsObject(std::move(draw), 0.5f);
-    player.core.transform().position = Vector3{0.0f, 5.0f, 0.0f};
+    player.transform.position = Vector3{0.0f, 5.0f, 0.0f};
 
     mesh = GenMeshCube(20.0f, 1.0f, 20.0f);
     draw = dez::DrawObject(mesh, dez::Transform({0.0f, -0.5f, 0.0f}), BROWN);
