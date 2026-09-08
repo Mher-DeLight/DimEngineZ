@@ -192,7 +192,6 @@ void PhysicsObject::resolveCollision(PhysicsObject& other) {
     }
 }
 void PhysicsObject::selfRegister() {
-    physics::registerObject(this);
     manager::registerObject(manager::managedObject(this));
 }
 
