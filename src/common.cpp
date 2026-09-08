@@ -147,7 +147,6 @@ void PhysicsObject::resolveCollision(PhysicsObject& other) {
 
     // find the axis with the smallest penetration, that's the axis we'll resolve the collision on.
     // (aabb)
-    is_on_ground = false;
     if (overlapX <= overlapY && overlapX <= overlapZ) { // x axis
         float direction =
             core.transform().position.x < other.core.transform().position.x ? -1.0f : 1.0f;
@@ -176,6 +175,8 @@ void PhysicsObject::resolveCollision(PhysicsObject& other) {
             other.core.velocity.y *= -1.0f * bounce;
         if (direction > 0.0f)
             is_on_ground = true;
+        else
+            other.is_on_ground = true;
     } else { // z axis
         float direction =
             core.transform().position.z < other.core.transform().position.z ? -1.0f : 1.0f;
