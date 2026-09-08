@@ -162,6 +162,7 @@ struct CollisionBox {
 struct PhysicsObject {
     CollisionBox collision;
     MovementObject core;
+    Transform& transform;
     bool is_on_ground = false;
     bool is_static = false;
     float bounce = 1.0f;
@@ -170,7 +171,8 @@ struct PhysicsObject {
     void tick(float delta);
 
     PhysicsObject(DrawObject shape, float bounce_ = 1.0f)
-        : collision(shape.model), core(std::move(shape)), bounce(bounce_) {
+        : collision(shape.model), core(std::move(shape)), bounce(bounce_),
+          transform(core.transform()) {
         selfRegister();
     }
 

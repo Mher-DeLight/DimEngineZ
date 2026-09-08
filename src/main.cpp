@@ -28,14 +28,14 @@ int main() {
         constexpr float CAM_SPEED = 10.0f;
 
         if (IsKeyDown(KEY_RIGHT)) {
-            player.core.transform().position.x += SPEED * delta;
+            player.transform.position.x += SPEED * delta;
         } else if (IsKeyDown(KEY_LEFT)) {
-            player.core.transform().position.x -= SPEED * delta;
+            player.transform.position.x -= SPEED * delta;
         }
         if (IsKeyDown(KEY_DOWN)) {
-            player.core.transform().position.z += SPEED * delta;
+            player.transform.position.z += SPEED * delta;
         } else if (IsKeyDown(KEY_UP)) {
-            player.core.transform().position.z -= SPEED * delta;
+            player.transform.position.z -= SPEED * delta;
         }
 
         if (IsKeyPressed(KEY_SPACE) && player.is_on_ground) {
