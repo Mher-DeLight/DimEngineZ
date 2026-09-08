@@ -62,6 +62,28 @@ int fixedloop(int targetFPS, std::function<bool(float)> physics, FuncitonCallbac
     CloseWindow();
     return status ? 0 : -1;
 }
+int main(int targetFPS, std::function<bool(float)> func) {
+    SetTargetFPS(targetFPS);
+
+    const float fixed_delta = 1.0f / targetFPS;
+    float accumulator = 0.0f;
+
+    bool status = true;
+
+    while (!WindowShouldClose() && status) {
+        BeginDrawing();
+        accumulator += GetFrameTime();
+
+        while (accumulator >= fixed_delta) {
+            status = func(fixed_delta);
+            accumulator -= fixed_delta;
+        }
+        EndDrawing();
+    }
+
+    CloseWindow();
+    return 0;
+}
 
 bool render(Color background, bool clear, FuncitonCallback func) {
     BeginDrawing();
@@ -80,10 +102,17 @@ void registerObject(managedObject obj) {
         physics::registerObject(std::get<PhysicsObject*>(obj));
     }
 }
-void tick(float delta) {
+void tick(float delta, Camera& cam) {
     for (auto& obj : handledObjects) {
         tickObject(obj, delta);
     }
+
+    ClearBackground(RAYWHITE);
+    BeginMode3D(cam);
+    for (auto& obj : handledObjects) {
+        drawObject(obj);
+    }
+    EndMode3D();
 }
 void tickObject(managedObject obj, float delta) {
     if (std::holds_alternative<PhysicsObject*>(obj)) {
@@ -91,11 +120,23 @@ void tickObject(managedObject obj, float delta) {
         cst->tick(delta);
         physics::resolveCollisionForObject(cst);
     } else if (std::holds_alternative<DrawObject*>(obj)) {
+        // draws are handled separately
+    } else if (std::holds_alternative<MovementObject*>(obj)) {
+        auto cst = std::get<MovementObject*>(obj);
+    } else {
+        throw std::runtime_error("DimEngineZ: invalid type in handledObjects for object handler");
+    }
+}
+void drawObject(managedObject obj) {
+    if (std::holds_alternative<PhysicsObject*>(obj)) {
+        auto cst = std::get<PhysicsObject*>(obj);
+        drawObject(managedObject(&cst->core));
+    } else if (std::holds_alternative<DrawObject*>(obj)) {
         auto cst = std::get<DrawObject*>(obj);
         cst->draw();
     } else if (std::holds_alternative<MovementObject*>(obj)) {
         auto cst = std::get<MovementObject*>(obj);
-        cst->shape.draw();
+        drawObject(managedObject(&cst->shape));
     } else {
         throw std::runtime_error("DimEngineZ: invalid type in handledObjects for object handler");
     }

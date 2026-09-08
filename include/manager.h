@@ -14,8 +14,11 @@ int fixedloop(int targetFPS, float fixed_delta_inverse, std::function<bool(float
 int fixedloop(int targetFPS, std::function<bool(float)> func, FuncitonCallback render);
 bool render(Color background, bool clear, FuncitonCallback func);
 
+int main(int targetFPS, std::function<bool(float)> func);
+
 void registerObject(managedObject obj);
-void tick(float delta);
+void tick(float delta, Camera& cam);
 void tickObject(managedObject obj, float delta);
+void drawObject(managedObject obj);
 
 } // namespace DimEngineZ::manager

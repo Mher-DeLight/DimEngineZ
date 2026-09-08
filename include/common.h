@@ -203,6 +203,9 @@ public:
     operator const Camera3D&() const {
         return cam;
     }
+    operator Camera3D&() {
+        return cam;
+    }
 
     void refreshTarget();
 
