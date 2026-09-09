@@ -35,11 +35,7 @@ int main() {
         player.core.setVelocity(dez::Vec3{input.x, player.core.velocity.y, input.y});
         player.core.applyAcceleration(Vector3{0.0f, -GRAVITY, 0.0f}, delta);
 
-        if (IsKeyPressed(KEY_Q)) {
-            return false; // exit
-        }
-
         DimEngineZ::manager::tick(delta);
-        return true;
+        return !dez::input::isKeyPressed(KEY_Q);
     });
 }

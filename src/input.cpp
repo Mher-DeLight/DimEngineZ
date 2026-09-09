@@ -15,4 +15,11 @@ Vec3 getVector3(int keyNegX, int keyPosX, int keyNegY, int keyPosY, int keyNegZ,
                 static_cast<float>(getAxis(keyPosZ, keyNegZ))};
 }
 
+bool isKeyPressed(int key) {
+    return IsKeyPressed(key);
+}
+bool isKeyDown(int key) {
+    return IsKeyDown(key);
+}
+
 } // namespace DimEngineZ::input
