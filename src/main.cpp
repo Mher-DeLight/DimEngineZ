@@ -32,7 +32,7 @@ int main() {
                 object.core.applyImpulse(Vector3{0.0f, LAUNCH_FORCE, 0.0f});
             } else {
                 object.core.setVelocity(dez::Vec3::ZERO);
-                object.core.applyImpulse(Vector3{LAUNCH_FORCE, 0.0f, 0.0f});
+                object.core.applyImpulse(dez::Vec3{LAUNCH_FORCE, 0.0f, 0.0f});
             }
         }
         object.core.applyAcceleration(Vector3{0.0f, -GRAVITY, 0.0f}, delta);
