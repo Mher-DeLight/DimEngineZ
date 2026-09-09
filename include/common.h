@@ -212,6 +212,7 @@ struct MovementObject {
     void tick(float delta);
     void applyVelocity(const Vec3& applied);
     void setVelocity(const Vec3& newVelocity);
+    void setHorizontalVelocity(const Vec2& newVelocity);
     void applyAcceleration(const Vec3& applied, float delta);
     void applyImpulse(const Vec3& impulse);
     void applyForce(const Vec3& force, float delta);

@@ -32,7 +32,7 @@ int main() {
         if (IsKeyPressed(KEY_SPACE) && player.isOnGround) {
             player.core.applyImpulse(Vector3{0.0f, JUMP_FORCE, 0.0f});
         }
-        player.core.setVelocity(dez::Vec3{input.x, player.core.velocity.y, input.y});
+        player.core.setHorizontalVelocity(input);
         player.core.applyAcceleration(Vector3{0.0f, -GRAVITY, 0.0f}, delta);
 
         dez::manager::tick(delta);

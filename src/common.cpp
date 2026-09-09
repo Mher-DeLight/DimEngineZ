@@ -112,6 +112,10 @@ void MovementObject::applyVelocity(const Vec3& applied) {
 void MovementObject::setVelocity(const Vec3& newvelocity) {
     velocity = newvelocity;
 }
+void MovementObject::setHorizontalVelocity(const Vec2& newVelocity) {
+    velocity.x = newVelocity.x;
+    velocity.z = newVelocity.y;
+}
 
 void MovementObject::applyForce(const Vec3& force, float delta) {
     velocity += (force / mass) * delta;
