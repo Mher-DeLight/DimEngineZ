@@ -229,14 +229,18 @@ struct PhysicsObject {
     CollisionBox collision;
     MovementObject core;
     Transform& transform;
-    bool is_on_ground = false;
-    bool is_static = false;
+    bool isOnGround = false;
+    bool isStatic = false;
+    bool collisionsEnabled = true;
     float bounce = 1.0f;
 
     void resolveCollision(PhysicsObject& other);
     void tick(float delta);
     void setStatic(bool is_true) {
-        is_static = is_true;
+        isStatic = is_true;
+    }
+    void setCollisionsEnabled(bool is_true) {
+        collisionsEnabled = is_true;
     }
 
     PhysicsObject(DrawObject shape, float bounce_ = 1.0f)

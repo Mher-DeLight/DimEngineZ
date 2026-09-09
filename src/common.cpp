@@ -139,7 +139,7 @@ void CollisionBox::update(const Transform& transform) {
 
 // == PHYSICS OBJECT ==
 void PhysicsObject::tick(float delta) {
-    is_on_ground = false;
+    isOnGround = false;
     core.tick(delta);
 
     Vector3 position = core.transform().position;
@@ -157,6 +157,9 @@ void PhysicsObject::resolveCollision(PhysicsObject& other) {
     collision.update(core.transform());
     other.collision.update(other.core.transform());
 
+    if (!collisionsEnabled || !other.collisionsEnabled)
+        return;
+
     if (!collision.colliding_with(other.collision))
         return;
 
@@ -173,44 +176,44 @@ void PhysicsObject::resolveCollision(PhysicsObject& other) {
         float direction =
             core.transform().position.x < other.core.transform().position.x ? -1.0f : 1.0f;
 
-        core.transform().moveX(direction * overlapX * (other.is_static ? 1.0f : 0.5f) *
-                               static_cast<int>(!is_static));
-        other.core.transform().moveX(-direction * overlapX * (is_static ? 1.0f : 0.5f) *
-                                     static_cast<int>(!other.is_static));
+        core.transform().moveX(direction * overlapX * (other.isStatic ? 1.0f : 0.5f) *
+                               static_cast<int>(!isStatic));
+        other.core.transform().moveX(-direction * overlapX * (isStatic ? 1.0f : 0.5f) *
+                                     static_cast<int>(!other.isStatic));
 
-        if (!is_static)
+        if (!isStatic)
             core.velocity.x *= -1.0f * bounce;
-        if (!other.is_static)
+        if (!other.isStatic)
             other.core.velocity.x *= -1.0f * bounce;
     } else if (overlapY <= overlapZ) { // y axis
         float direction =
             core.transform().position.y < other.core.transform().position.y ? -1.0f : 1.0f;
 
-        core.transform().moveY(direction * overlapY * (other.is_static ? 1.0f : 0.5f) *
-                               static_cast<int>(!is_static));
-        other.core.transform().moveY(-direction * overlapY * (is_static ? 1.0f : 0.5f) *
-                                     static_cast<int>(!other.is_static));
+        core.transform().moveY(direction * overlapY * (other.isStatic ? 1.0f : 0.5f) *
+                               static_cast<int>(!isStatic));
+        other.core.transform().moveY(-direction * overlapY * (isStatic ? 1.0f : 0.5f) *
+                                     static_cast<int>(!other.isStatic));
 
-        if (!is_static)
+        if (!isStatic)
             core.velocity.y *= -1.0f * bounce;
-        if (!other.is_static)
+        if (!other.isStatic)
             other.core.velocity.y *= -1.0f * bounce;
         if (direction > 0.0f)
-            is_on_ground = true;
+            isOnGround = true;
         else
-            other.is_on_ground = true;
+            other.isOnGround = true;
     } else { // z axis
         float direction =
             core.transform().position.z < other.core.transform().position.z ? -1.0f : 1.0f;
 
-        core.transform().moveZ(direction * overlapZ * (other.is_static ? 1.0f : 0.5f) *
-                               static_cast<int>(!is_static));
-        other.core.transform().moveZ(-direction * overlapZ * (is_static ? 1.0f : 0.5f) *
-                                     static_cast<int>(!other.is_static));
+        core.transform().moveZ(direction * overlapZ * (other.isStatic ? 1.0f : 0.5f) *
+                               static_cast<int>(!isStatic));
+        other.core.transform().moveZ(-direction * overlapZ * (isStatic ? 1.0f : 0.5f) *
+                                     static_cast<int>(!other.isStatic));
 
-        if (!is_static)
+        if (!isStatic)
             core.velocity.z *= -1.0f * bounce;
-        if (!other.is_static)
+        if (!other.isStatic)
             other.core.velocity.z *= -1.0f * bounce;
     }
 }
