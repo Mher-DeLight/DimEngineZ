@@ -13,10 +13,11 @@ int main() {
         MAIN_CAMERA);
     camera.setTarget(Vector3{0.0f, 0.0f, 0.0f});
 
-    Mesh mesh = GenMeshCube(2.0f, 2.0f, 2.0f);
+    Mesh mesh = GenMeshCube(2.0f, 4.0f, 2.0f);
     auto draw = dez::DrawObject(mesh, dez::Transform(), GREEN);
-    auto object = dez::PhysicsObject(std::move(draw), 0.0f);
-    object.transform.position = Vector3{0.0f, 5.0f, 0.0f};
+    auto player = dez::PhysicsObject(std::move(draw), 0.0f);
+    player.transform.position = Vector3{0.0f, 5.0f, 0.0f};
+    player.core.mass = 50.0f;
 
     mesh = GenMeshCube(20.0f, 1.0f, 20.0f);
     draw = dez::DrawObject(mesh, dez::Transform({0.0f, -0.5f, 0.0f}), BROWN);
@@ -24,16 +25,16 @@ int main() {
     ground.setStatic(true);
 
     return dez::manager::main(60, [&](float delta) {
-        constexpr float LAUNCH_FORCE = 15.0f;
-        constexpr float GRAVITY = 20.0f;
+        constexpr float JUMP_FORCE = 242.0f;
+        constexpr float GRAVITY = 9.81f;
         constexpr float SPEED = 10.0f;
         dez::Vec2 input = dez::input::getVector() * SPEED;
 
-        if (IsKeyPressed(KEY_SPACE) && object.is_on_ground) {
-            object.core.applyImpulse(Vector3{0.0f, LAUNCH_FORCE, 0.0f});
+        if (IsKeyPressed(KEY_SPACE) && player.is_on_ground) {
+            player.core.applyImpulse(Vector3{0.0f, JUMP_FORCE, 0.0f});
         }
-        object.core.setVelocity(dez::Vec3{input.x, object.core.velocity.y, input.y});
-        object.core.applyAcceleration(Vector3{0.0f, -GRAVITY, 0.0f}, delta);
+        player.core.setVelocity(dez::Vec3{input.x, player.core.velocity.y, input.y});
+        player.core.applyAcceleration(Vector3{0.0f, -GRAVITY, 0.0f}, delta);
 
         if (IsKeyPressed(KEY_Q)) {
             return false; // exit
