@@ -1,9 +1,9 @@
 #pragma once
 #include "physics.h"
 #include <optional>
-#define MAIN_CAMERA true
 
 namespace DimEngineZ::manager {
+inline int exitCode = 0;
 inline std::optional<std::reference_wrapper<Camera>> mainCamera;
 
 using managedObject = std::variant<DrawObject*, MovementObject*, PhysicsObject*, Camera*>;

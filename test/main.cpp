@@ -23,7 +23,7 @@ int main() {
     auto ground = dez::PhysicsObject(std::move(draw));
     ground.setStatic(true);
 
-    return dez::manager::main(60, [&](float delta) {
+    mainloop(60, {
         constexpr float JUMP_FORCE = 242.0f;
         constexpr float GRAVITY = 9.81f;
         constexpr float SPEED = 10.0f;
@@ -35,7 +35,9 @@ int main() {
         player.core.setVelocity(dez::Vec3{input.x, player.core.velocity.y, input.y});
         player.core.applyAcceleration(Vector3{0.0f, -GRAVITY, 0.0f}, delta);
 
-        DimEngineZ::manager::tick(delta);
-        return !dez::input::isKeyPressed(KEY_Q);
+        dez::manager::tick(delta);
+        if (dez::input::isKeyPressed(KEY_Q)) {
+            exit(0);
+        }
     });
 }

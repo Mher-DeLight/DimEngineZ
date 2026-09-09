@@ -39,7 +39,7 @@ int fixedloop(int targetFPS, float fixed_delta_inverse, std::function<bool(float
     }
 
     CloseWindow();
-    return status ? 0 : -1;
+    return exitCode;
 }
 int fixedloop(int targetFPS, std::function<bool(float)> physics, FuncitonCallback render) {
     SetTargetFPS(targetFPS);
@@ -61,7 +61,7 @@ int fixedloop(int targetFPS, std::function<bool(float)> physics, FuncitonCallbac
     }
 
     CloseWindow();
-    return status ? 0 : -1;
+    return exitCode;
 }
 int main(int targetFPS, std::function<bool(float)> func) {
     SetTargetFPS(targetFPS);
@@ -83,7 +83,7 @@ int main(int targetFPS, std::function<bool(float)> func) {
     }
 
     CloseWindow();
-    return 0;
+    return exitCode;
 }
 
 bool render(Color background, bool clear, FuncitonCallback func) {
