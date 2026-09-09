@@ -13,4 +13,4 @@
     DimEngineZ::manager::exitCode = code;                                                          \
     return false;
 #define mainloop(framerate, body)                                                                  \
-    return DimEngineZ::manager::main(framerate, [&](float delta) { body return true; })
+    DimEngineZ::manager::main(framerate, [&](float delta) { body return true; });

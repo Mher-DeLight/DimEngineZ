@@ -23,7 +23,7 @@ int main() {
     auto ground = dez::PhysicsObject(std::move(draw));
     ground.setStatic(true);
 
-    mainloop(60, {
+    int exitcode = mainloop(60, {
         constexpr float JUMP_FORCE = 242.0f;
         constexpr float GRAVITY = 9.81f;
         constexpr float SPEED = 10.0f;
@@ -40,4 +40,7 @@ int main() {
             exit(0);
         }
     });
+
+    std::cout << "EXIT CODE: " << exitcode << std::endl;
+    return exitcode;
 }
