@@ -28,7 +28,7 @@ int main() {
         constexpr float JUMP_FORCE = 242.0f;
         constexpr float GRAVITY = 9.81f;
         constexpr float SPEED = 10.0f;
-        dez::Vec2 input = dez::input::getVector() * SPEED;
+        dez::Vec2 input = dez::input::getVector2() * SPEED;
 
         if (IsKeyPressed(KEY_SPACE) && player.is_on_ground) {
             player.core.applyImpulse(Vector3{0.0f, JUMP_FORCE, 0.0f});
