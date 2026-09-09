@@ -1,5 +1,4 @@
-#include "../include/DimEngineZ.h"
-#include "raylib.h"
+#include <DimEngineZ.h>
 #include <iostream>
 
 int main() {

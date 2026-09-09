@@ -11,7 +11,7 @@ add_library(DimEngineZ
     src/physics.cpp
     src/manager.cpp
     src/input.cpp)
-target_include_directories(DimEngineZ PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(DimEngineZ PUBLIC ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(DimEngineZ PRIVATE raylib)
 
 if (BUILD_TESTS)
