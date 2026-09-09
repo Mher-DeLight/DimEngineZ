@@ -22,6 +22,20 @@ const Vec3 Vec3::RIGHT{1.0f, 0.0f, 0.0f};
 const Vec3 Vec3::FORWARD{0.0f, 0.0f, 1.0f};
 const Vec3 Vec3::BACKWARD{0.0f, 0.0f, -1.0f};
 
+// == VEC2 ==
+float Vec2::magnitude() const {
+    return Vector2Length(vec);
+}
+Vector2 Vec2::normalize() const {
+    return Vector2Normalize(vec);
+}
+const Vec2 Vec2::ZERO{0.0f, 0.0f};
+const Vec2 Vec2::ONE{1.0f, 1.0f};
+const Vec2 Vec2::UP{0.0f, 1.0f};
+const Vec2 Vec2::DOWN{0.0f, -1.0f};
+const Vec2 Vec2::LEFT{-1.0f, 0.0f};
+const Vec2 Vec2::RIGHT{1.0f, 0.0f};
+
 // == TRANSFORM ==
 float Transform::magnitude() const {
     return Vector3Length(position);

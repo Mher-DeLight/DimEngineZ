@@ -8,7 +8,7 @@ int main() {
     dez::manager::initWindow(1000, 800, "3D Cube Renderer");
 
     dez::Camera camera(
-        {0.0f, 2.0f, 20.0f},
+        {0.0f, 5.0f, 10.0f},
         dez::CameraOptions{.fovy = 90.0f, .direction = {0.0f, -1.0f, -1.0f}, .up = dez::Vec3::UP},
         MAIN_CAMERA);
     camera.setTarget(Vector3{0.0f, 0.0f, 0.0f});
@@ -25,16 +25,14 @@ int main() {
 
     return dez::manager::main(60, [&](float delta) {
         constexpr float LAUNCH_FORCE = 15.0f;
-        constexpr float GRAVITY = 9.81f;
+        constexpr float GRAVITY = 20.0f;
+        constexpr float SPEED = 10.0f;
+        dez::Vec2 input = dez::input::getVector() * SPEED;
 
-        if (IsKeyPressed(KEY_SPACE)) {
-            if (object.is_on_ground) {
-                object.core.applyImpulse(Vector3{0.0f, LAUNCH_FORCE, 0.0f});
-            } else {
-                object.core.setVelocity(dez::Vec3::ZERO);
-                object.core.applyImpulse(dez::Vec3{LAUNCH_FORCE, 0.0f, 0.0f});
-            }
+        if (IsKeyPressed(KEY_SPACE) && object.is_on_ground) {
+            object.core.applyImpulse(Vector3{0.0f, LAUNCH_FORCE, 0.0f});
         }
+        object.core.setVelocity(dez::Vec3{input.x, object.core.velocity.y, input.y});
         object.core.applyAcceleration(Vector3{0.0f, -GRAVITY, 0.0f}, delta);
 
         if (IsKeyPressed(KEY_Q)) {

@@ -69,6 +69,63 @@ public:
     static const Vec3 FORWARD;
     static const Vec3 BACKWARD;
 };
+struct Vec2 {
+private:
+    Vector2 vec;
+
+public:
+    float& x;
+    float& y;
+
+    Vec2(float x_ = 0.0f, float y_ = 0.0f) : vec{x_, y_}, x(vec.x), y(vec.y) {}
+    Vec2(const Vector2& initvec) : vec(initvec), x(vec.x), y(vec.y) {}
+    Vec2(std::initializer_list<float> lst)
+        : vec{*(lst.begin()), *(lst.begin() + 1)}, x(vec.x), y(vec.y) {}
+    Vec2(const Vec2& other) : vec(other.vec), x(vec.x), y(vec.y) {}
+
+    float magnitude() const;
+    Vector2 normalize() const;
+
+    Vec2 operator+(const Vec2& other) {
+        return Vec2(other.vec + vec);
+    }
+    Vec2 operator-(const Vec2& other) {
+        return Vec2(other.vec - vec);
+    }
+    Vec2 operator*(const Vec2& other) {
+        return Vec2(other.vec * vec);
+    }
+    Vec2 operator/(const Vec2& other) {
+        return Vec2(other.vec / vec);
+    }
+    Vec2 operator*(float scalar) {
+        return Vec2(vec * scalar);
+    }
+    Vec2 operator/(float scalar) {
+        return Vec2(vec / scalar);
+    }
+
+    Vec2& operator=(const Vec2& other) {
+        vec = other.vec;
+        return *this;
+    }
+    Vec2 operator+=(const Vec2& other) {
+        vec += other.vec;
+        return *this;
+    }
+
+    operator const Vector2&() const {
+        return vec;
+    }
+
+    static const Vec2 ZERO;
+    static const Vec2 ONE;
+    static const Vec2 UP;
+    static const Vec2 DOWN;
+    static const Vec2 LEFT;
+    static const Vec2 RIGHT;
+};
+
 struct Transform {
     Vec3 position{0.0f, 0.0f, 0.0f};
     Vec3 rotation{0.0f, 0.0f, 0.0f};
