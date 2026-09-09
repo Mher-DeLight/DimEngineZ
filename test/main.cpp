@@ -29,7 +29,7 @@ int main() {
         constexpr float SPEED = 10.0f;
         dez::Vec2 input = dez::input::getVector2() * SPEED;
 
-        if (IsKeyPressed(KEY_SPACE) && player.isOnGround) {
+        if (dez::input::isKeyPressed(KEY_SPACE) && player.isOnGround) {
             player.core.applyImpulse(Vector3{0.0f, JUMP_FORCE, 0.0f});
         }
         player.core.setHorizontalVelocity(input);
