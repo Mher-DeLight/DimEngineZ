@@ -92,20 +92,20 @@ void MovementObject::tick(float delta_) {
     applyDrag(velocity.y);
     applyDrag(velocity.z);
 }
-void MovementObject::applyVelocity(const Vector3& applied) {
+void MovementObject::applyVelocity(const Vec3& applied) {
     velocity += applied;
 }
-void MovementObject::setVelocity(const Vector3& newvelocity) {
+void MovementObject::setVelocity(const Vec3& newvelocity) {
     velocity = newvelocity;
 }
 
-void MovementObject::applyForce(const Vector3& force, float delta) {
+void MovementObject::applyForce(const Vec3& force, float delta) {
     velocity += (force / mass) * delta;
 }
-void MovementObject::applyAcceleration(const Vector3& acceleration, float delta) {
+void MovementObject::applyAcceleration(const Vec3& acceleration, float delta) {
     velocity += acceleration * delta;
 }
-void MovementObject::applyImpulse(const Vector3& impulse) {
+void MovementObject::applyImpulse(const Vec3& impulse) {
     velocity += impulse / mass;
 }
 

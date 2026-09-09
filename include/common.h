@@ -153,11 +153,11 @@ struct MovementObject {
     MovementObject(DrawObject shape_) : shape(std::move(shape_)) {}
 
     void tick(float delta);
-    void applyVelocity(const Vector3& applied);
-    void setVelocity(const Vector3& newVelocity);
-    void applyAcceleration(const Vector3& applied, float delta);
-    void applyImpulse(const Vector3& impulse);
-    void applyForce(const Vector3& force, float delta);
+    void applyVelocity(const Vec3& applied);
+    void setVelocity(const Vec3& newVelocity);
+    void applyAcceleration(const Vec3& applied, float delta);
+    void applyImpulse(const Vec3& impulse);
+    void applyForce(const Vec3& force, float delta);
 };
 struct CollisionBox {
     BoundingBox box;
