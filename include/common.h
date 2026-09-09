@@ -178,6 +178,9 @@ struct PhysicsObject {
 
     void resolveCollision(PhysicsObject& other);
     void tick(float delta);
+    void setStatic(bool is_true) {
+        is_static = is_true;
+    }
 
     PhysicsObject(DrawObject shape, float bounce_ = 1.0f)
         : collision(shape.model), core(std::move(shape)), bounce(bounce_),

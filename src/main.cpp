@@ -21,7 +21,7 @@ int main() {
     mesh = GenMeshCube(20.0f, 1.0f, 20.0f);
     draw = dez::DrawObject(mesh, dez::Transform({0.0f, -0.5f, 0.0f}), BROWN);
     auto ground = dez::PhysicsObject(std::move(draw));
-    ground.is_static = true;
+    ground.setStatic(true);
 
     return dez::manager::main(60, [&](float delta) {
         constexpr float LAUNCH_FORCE = 15.0f;
