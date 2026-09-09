@@ -13,6 +13,14 @@ float Vec3::magnitude() const {
 Vector3 Vec3::normalize() const {
     return Vector3Normalize(vec);
 }
+const Vec3 Vec3::ZERO{0.0f, 0.0f, 0.0f};
+const Vec3 Vec3::ONE{1.0f, 1.0f, 1.0f};
+const Vec3 Vec3::UP{0.0f, 1.0f, 0.0f};
+const Vec3 Vec3::DOWN{0.0f, -1.0f, 0.0f};
+const Vec3 Vec3::LEFT{-1.0f, 0.0f, 0.0f};
+const Vec3 Vec3::RIGHT{1.0f, 0.0f, 0.0f};
+const Vec3 Vec3::FORWARD{0.0f, 0.0f, 1.0f};
+const Vec3 Vec3::BACKWARD{0.0f, 0.0f, -1.0f};
 
 // == TRANSFORM ==
 float Transform::magnitude() const {

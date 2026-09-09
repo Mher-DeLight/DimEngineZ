@@ -59,6 +59,15 @@ public:
     operator const Vector3&() const {
         return vec;
     }
+
+    static const Vec3 ZERO;
+    static const Vec3 ONE;
+    static const Vec3 UP;
+    static const Vec3 DOWN;
+    static const Vec3 LEFT;
+    static const Vec3 RIGHT;
+    static const Vec3 FORWARD;
+    static const Vec3 BACKWARD;
 };
 struct Transform {
     Vec3 position{0.0f, 0.0f, 0.0f};
