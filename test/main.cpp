@@ -22,7 +22,7 @@ int main() {
     mesh = GenMeshCube(20.0f, 1.0f, 20.0f);
     draw = dez::DrawObject(mesh, dez::Transform({0.0f, -0.5f, 0.0f}), BROWN);
     auto ground = dez::PhysicsObject(std::move(draw));
-    ground.setStatic(true);
+    ground.enableStatic(true);
 
     int exitcode = mainloop(60, {
         constexpr float JUMP_FORCE = 242.0f;

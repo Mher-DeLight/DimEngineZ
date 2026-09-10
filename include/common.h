@@ -237,10 +237,10 @@ struct PhysicsObject {
 
     void resolveCollision(PhysicsObject& other);
     void tick(float delta);
-    void setStatic(bool is_true) {
+    void enableStatic(bool is_true) {
         isStatic = is_true;
     }
-    void setCollisionsEnabled(bool is_true) {
+    void enableCollisions(bool is_true) {
         collisionsEnabled = is_true;
     }
 
