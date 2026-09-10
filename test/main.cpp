@@ -41,6 +41,7 @@ int main() {
         }
     });
 
-    std::cout << "EXIT CODE: " << exitcode << std::endl;
+    dez::logger::flushLogLine(
+        std::string("==== EXIT WITH CODE: " + std::to_string(dez::manager::exitCode) + " ====="));
     return exitcode;
 }

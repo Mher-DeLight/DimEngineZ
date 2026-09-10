@@ -3,6 +3,7 @@
 // INCLUDES
 #include "common.h"
 #include "input.h"
+#include "logger.h"
 #include "manager.h"
 #include "physics.h"
 
