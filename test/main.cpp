@@ -41,7 +41,7 @@ int main() {
         }
     });
 
-    dez::logger::flushLogLine(
-        std::string("==== EXIT WITH CODE: " + std::to_string(dez::manager::exitCode) + " ====="));
+    dez::logger::flushLog("==== EXIT WITH CODE: " + std::to_string(dez::manager::exitCode) +
+                          " =====");
     return exitcode;
 }
