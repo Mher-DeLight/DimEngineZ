@@ -6,9 +6,11 @@
 namespace DimEngineZ::logger {
 
 extern std::stringstream outputStream;
+extern int raylibLogLevel;
 
 void flush();
 void loadToCout();
+void showRaylibLogs(int logLevel = LOG_INFO);
 
 template <typename T> void log(const T& message, bool newline = true) {
     outputStream << message;

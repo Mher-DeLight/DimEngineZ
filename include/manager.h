@@ -8,7 +8,7 @@ inline std::optional<std::reference_wrapper<Camera>> mainCamera;
 
 using managedObject = std::variant<DrawObject*, MovementObject*, PhysicsObject*, Camera*>;
 inline std::vector<managedObject> handledObjects;
-void initWindow(int width, int height, const std::string& title);
+void init(int width, int height, const std::string& title);
 
 using FuncitonCallback = std::function<bool()>;
 int loop(int targetFPS, FuncitonCallback func);

@@ -1,4 +1,5 @@
 #include "../include/manager.h"
+#include "../include/logger.h"
 #include <optional>
 #include <stdexcept>
 
@@ -6,7 +7,8 @@ namespace DimEngineZ::manager {
 using FuncitonCallback = std::function<bool()>;
 using FixedCallback = std::function<bool(float)>;
 
-void initWindow(int width, int height, const std::string& title) {
+void init(int width, int height, const std::string& title) {
+    SetTraceLogLevel(logger::raylibLogLevel);
     InitWindow(width, height, title.c_str());
 }
 int loop(int targetFPS, FuncitonCallback func) {

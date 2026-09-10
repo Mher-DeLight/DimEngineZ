@@ -4,7 +4,8 @@
 int main() {
     namespace dez = DimEngineZ;
 
-    dez::manager::initWindow(1000, 800, "3D Cube Renderer");
+    dez::logger::showRaylibLogs();
+    dez::manager::init(1000, 800, "DimEngineZ test");
 
     dez::Camera camera(
         {0.0f, 5.0f, 10.0f},
