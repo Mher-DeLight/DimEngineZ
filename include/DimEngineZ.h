@@ -9,7 +9,7 @@
 // MACROS
 #define MAIN_CAMERA true
 #define NOT_MAIN_CAMERA false
-#define exit(code)                                                                                 \
+#define exitwcode(code)                                                                            \
     DimEngineZ::manager::exitCode = code;                                                          \
     return false;
 #define mainloop(framerate, body)                                                                  \

@@ -37,7 +37,7 @@ int main() {
 
         dez::manager::tick(delta);
         if (dez::input::isKeyPressed(KEY_Q)) {
-            exit(0);
+            exitwcode(0);
         }
     });
 
