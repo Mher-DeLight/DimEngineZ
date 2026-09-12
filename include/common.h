@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <functional>
 #include <raylib.h>
 #include <raymath.h>
@@ -32,7 +33,7 @@ public:
         return Vec3(other.vec + vec);
     }
     Vec3 operator-(const Vec3& other) {
-        return Vec3(other.vec - vec);
+        return Vec3(vec - other.vec);
     }
     Vec3 operator*(const Vec3& other) {
         return Vec3(other.vec * vec);
@@ -163,7 +164,8 @@ struct DrawObject {
     }
 
     ~DrawObject() {
-        UnloadModel(model);
+        if (IsWindowReady())
+            UnloadModel(model);
     }
 
     DrawObject(const DrawObject&) = delete;
@@ -218,13 +220,19 @@ struct MovementObject {
     void applyForce(const Vec3& force, float delta);
 };
 struct CollisionBox {
-    BoundingBox box;
+    Vector3 center;
+    float radius;
     void update(const Transform& transform);
 
     bool colliding_with(const CollisionBox& other) const;
 
-    explicit CollisionBox(const BoundingBox& box_) : box(box_) {}
-    explicit CollisionBox(const Model& model) : box(GetModelBoundingBox(model)) {}
+    explicit CollisionBox(const BoundingBox& box_)
+        : center{(box_.min.x + box_.max.x) * 0.5f, (box_.min.y + box_.max.y) * 0.5f,
+                 (box_.min.z + box_.max.z) * 0.5f},
+          radius{std::min(
+                     {box_.max.x - box_.min.x, box_.max.y - box_.min.y, box_.max.z - box_.min.z}) *
+                 0.5f} {}
+    explicit CollisionBox(const Model& model) : CollisionBox(GetModelBoundingBox(model)) {}
 };
 struct PhysicsObject {
     CollisionBox collision;

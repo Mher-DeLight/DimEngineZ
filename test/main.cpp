@@ -40,6 +40,7 @@ int main() {
         if (dez::input::isKeyPressed(KEY_Q)) {
             exitwcode(0);
         }
+        dez::logger::flushLog(player.transform.position.y);
     });
 
     dez::logger::flushLog("==== EXIT WITH CODE: " + std::to_string(dez::manager::exitCode) +

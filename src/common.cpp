@@ -127,18 +127,12 @@ void MovementObject::applyImpulse(const Vec3& impulse) {
     velocity += impulse / mass;
 }
 
-// == COLLISION BOX ==
+// == COLLISION SPHERE ==
 bool CollisionBox::colliding_with(const CollisionBox& other) const {
-    return CheckCollisionBoxes(box, other.box);
+    return CheckCollisionSpheres(center, radius, other.center, other.radius);
 }
 void CollisionBox::update(const Transform& transform) {
-    Vector3 center = {(box.min.x + box.max.x) * 0.5f, (box.min.y + box.max.y) * 0.5f,
-                      (box.min.z + box.max.z) * 0.5f};
-
-    Vector3 offset = Vector3Subtract(transform.position, center);
-
-    box.min = Vector3Add(box.min, offset);
-    box.max = Vector3Add(box.max, offset);
+    center = transform.position;
 }
 
 // == PHYSICS OBJECT ==
@@ -148,14 +142,7 @@ void PhysicsObject::tick(float delta) {
 
     Vector3 position = core.transform().position;
 
-    Vector3 center = {(collision.box.min.x + collision.box.max.x) * 0.5f,
-                      (collision.box.min.y + collision.box.max.y) * 0.5f,
-                      (collision.box.min.z + collision.box.max.z) * 0.5f};
-
-    Vector3 offset = Vector3Subtract(position, center);
-
-    collision.box.min = Vector3Add(collision.box.min, offset);
-    collision.box.max = Vector3Add(collision.box.max, offset);
+    collision.center = position;
 }
 void PhysicsObject::resolveCollision(PhysicsObject& other) {
     collision.update(core.transform());
@@ -167,59 +154,33 @@ void PhysicsObject::resolveCollision(PhysicsObject& other) {
     if (!collision.colliding_with(other.collision))
         return;
 
-    BoundingBox& a = collision.box;
-    BoundingBox& b = other.collision.box;
+    Vector3 separation = Vector3Subtract(collision.center, other.collision.center);
+    float distance = Vector3Length(separation);
+    Vector3 normal =
+        distance > 0.0f ? Vector3Scale(separation, 1.0f / distance) : Vector3{0.0f, 1.0f, 0.0f};
+    float penetration = collision.radius + other.collision.radius - distance;
 
-    float overlapX = std::min(a.max.x, b.max.x) - std::max(a.min.x, b.min.x);
-    float overlapY = std::min(a.max.y, b.max.y) - std::max(a.min.y, b.min.y);
-    float overlapZ = std::min(a.max.z, b.max.z) - std::max(a.min.z, b.min.z);
+    float thisShare = other.isStatic ? 1.0f : 0.5f;
+    float otherShare = isStatic ? 1.0f : 0.5f;
+    if (!isStatic)
+        core.transform().move(Vector3Scale(normal, penetration * thisShare));
+    if (!other.isStatic)
+        other.core.transform().move(Vector3Scale(normal, -penetration * otherShare));
 
-    // find the axis with the smallest penetration, that's the axis we'll resolve the collision on.
-    // (aabb)
-    if (overlapX <= overlapY && overlapX <= overlapZ) { // x axis
-        float direction =
-            core.transform().position.x < other.core.transform().position.x ? -1.0f : 1.0f;
-
-        core.transform().moveX(direction * overlapX * (other.isStatic ? 1.0f : 0.5f) *
-                               static_cast<int>(!isStatic));
-        other.core.transform().moveX(-direction * overlapX * (isStatic ? 1.0f : 0.5f) *
-                                     static_cast<int>(!other.isStatic));
-
-        if (!isStatic)
-            core.velocity.x *= -1.0f * bounce;
-        if (!other.isStatic)
-            other.core.velocity.x *= -1.0f * bounce;
-    } else if (overlapY <= overlapZ) { // y axis
-        float direction =
-            core.transform().position.y < other.core.transform().position.y ? -1.0f : 1.0f;
-
-        core.transform().moveY(direction * overlapY * (other.isStatic ? 1.0f : 0.5f) *
-                               static_cast<int>(!isStatic));
-        other.core.transform().moveY(-direction * overlapY * (isStatic ? 1.0f : 0.5f) *
-                                     static_cast<int>(!other.isStatic));
-
-        if (!isStatic)
-            core.velocity.y *= -1.0f * bounce;
-        if (!other.isStatic)
-            other.core.velocity.y *= -1.0f * bounce;
-        if (direction > 0.0f)
-            isOnGround = true;
-        else
-            other.isOnGround = true;
-    } else { // z axis
-        float direction =
-            core.transform().position.z < other.core.transform().position.z ? -1.0f : 1.0f;
-
-        core.transform().moveZ(direction * overlapZ * (other.isStatic ? 1.0f : 0.5f) *
-                               static_cast<int>(!isStatic));
-        other.core.transform().moveZ(-direction * overlapZ * (isStatic ? 1.0f : 0.5f) *
-                                     static_cast<int>(!other.isStatic));
-
-        if (!isStatic)
-            core.velocity.z *= -1.0f * bounce;
-        if (!other.isStatic)
-            other.core.velocity.z *= -1.0f * bounce;
+    if (!isStatic) {
+        float velocityAlongNormal = Vector3DotProduct(core.velocity, normal);
+        core.velocity = core.velocity - Vec3(normal * ((1.0f + bounce) * velocityAlongNormal));
     }
+    if (!other.isStatic) {
+        float velocityAlongNormal = Vector3DotProduct(other.core.velocity, normal);
+        other.core.velocity =
+            other.core.velocity - Vec3(normal * ((1.0f + other.bounce) * velocityAlongNormal));
+    }
+
+    if (normal.y > 0.0f)
+        isOnGround = true;
+    else if (normal.y < 0.0f)
+        other.isOnGround = true;
 }
 void PhysicsObject::selfRegister() {
     manager::registerObject(manager::managedObject(this));
